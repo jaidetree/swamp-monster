@@ -293,6 +293,17 @@
 
   .section-header {
     background: url(/images/wood-bg.jpg) no-repeat;
-    @apply relative bg-cover border-t-1 border-t-white/50 border-b-1 border-b-white/25;
+    @apply relative bg-cover border-t-1 border-t-gold border-b-1 border-b-gold/50 flex flex-row flex-nowrap justify-stretch items-stretch;
+  }
+
+  .section-header .title {
+    @apply flex-shrink text-center mx-10;
+  }
+
+  .section-header:before,
+  .section-header:after {
+    content: "";
+    background: url(/images/lines.svg) repeat-x 0% 50%;
+    @apply h-8 flex-grow block;
   }
 }

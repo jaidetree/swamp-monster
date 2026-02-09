@@ -35,7 +35,7 @@ defmodule SwampWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <header class="px-4 sm:px-6 lg:px-8 absolute w-full">
+    <header class="absolute w-full">
       <div class="container navbar">
         <div class="flex-1">
           <a href="/" class="flex-1 flex w-fit items-center gap-2 text-2xl text-white/75 hover:text-white transition-color duration-300">

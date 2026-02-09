@@ -304,6 +304,6 @@
   .section-header:after {
     content: "";
     background: url(/images/lines.svg) repeat-x 0% 50%;
-    @apply h-8 flex-grow block;
+    @apply h-[20px] flex-grow block my-auto;
   }
 }

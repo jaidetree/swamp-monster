@@ -321,4 +321,8 @@
     background: url(/images/lines.svg) repeat-x 0% 50%;
     @apply h-[20px] flex-grow block my-auto;
   }
+
+  .works {
+    background: url(/images/scales-pattern.png);
+  }
 }

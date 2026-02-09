@@ -233,6 +233,7 @@
   --color-gold: rgb(215, 170, 93);
   --color-blood: rgb(84, 13, 13);
   --color-bone: rgb(250, 250, 250);
+  --color-base-100: rgb(12, 9, 9);
 }
 
 @utility font-body {
@@ -285,12 +286,25 @@
   @apply max-w-7xl mx-auto;
 }
 
+@utility btn {
+  @apply inline-block py-2 px-4;
+}
+
+@utility btn-ghost {
+  @apply border border-gold rounded-sm text-gold font-semibold text-sm bg-gold/10 shadow-lg hover:text-white hover:bg-gold/50 transition-colors duration-500;
+}
+
+@utility btn-text {
+  @apply text-gold font-semibold text-sm rounded-sm bg-gold/0 border border-gold/0 hover:text-white hover:bg-gold/50 hover:border-gold transition-colors duration-500;
+}
+
 @layer components {
   .navbar {
     @apply flex flex-row justify-between py-2;
   }
   .hero {
     background: url(/images/hero-bg.jpg) no-repeat;
+    background-size: cover;
     height: 495px;
   }
 
@@ -323,6 +337,13 @@
   }
 
   .works {
-    background: url(/images/scales-pattern.png);
+    background:
+      linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)),
+      url(/images/scales-pattern.png);
+  }
+
+  .footer {
+    background: url(/images/wood-bg.jpg) no-repeat;
+    @apply py-8 bg-cover;
   }
 }

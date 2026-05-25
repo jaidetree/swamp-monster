@@ -18,6 +18,10 @@ defmodule SwampWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    get "/contact", ContactController, :index
+
+    post "/contact", ContactController, :create
   end
 
   # Other scopes may use custom stacks.

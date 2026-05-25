@@ -31,11 +31,13 @@ defmodule SwampWeb.Layouts do
     default: nil,
     doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
 
+  attr :header_class, :string, default: nil
+
   slot :inner_block, required: true
 
   def app(assigns) do
     ~H"""
-    <header class="absolute w-full">
+    <header class={["site-header", @header_class]}>
       <div class="container navbar">
         <div class="flex-1">
           <a href="/" class="flex-1 flex w-fit items-center gap-2 text-2xl text-white/75 hover:text-white transition-color duration-300">
@@ -45,23 +47,23 @@ defmodule SwampWeb.Layouts do
         <div class="flex-none">
           <ul class="flex flex-column px-1 space-x-8 items-center uppercase text-base text-white/75">
             <li>
-              <a href="https://phoenixframework.org/" class="hover:text-white transition-color duration-300">Work</a>
+              <a href="/work" class="hover:text-white transition-color duration-300">Work</a>
             </li>
             <li>
-              <a href="https://phoenixframework.org/" class="hover:text-white transition-color duration-300">Training</a>
+              <a href="/training" class="hover:text-white transition-color duration-300">Training</a>
             </li>
             <li>
-              <a href="https://phoenixframework.org/" class="hover:text-white transition-color duration-300">Contact</a>
+              <a href="/contact" class="hover:text-white transition-color duration-300">Contact</a>
             </li>
             <li>
-              <a href="https://phoenixframework.org/" class="hover:text-white transition-color duration-300">Resources</a>
+              <a href="/resources" class="hover:text-white transition-color duration-300">Resources</a>
             </li>
           </ul>
         </div>
       </div>
     </header>
 
-    <main class="flex-grow">
+    <main class="flex-grow flex flex-col">
       {render_slot(@inner_block)}
     </main>
 
@@ -72,6 +74,24 @@ defmodule SwampWeb.Layouts do
     </footer>
 
     <.flash_group flash={@flash} />
+    """
+  end
+
+  @doc """
+  Renders an inside-page with the condensed navbar and no hero
+  ## Examples
+
+      <Layouts.page flash={@flash}>
+        <h1>Page Content</h1>
+      </Layouts.page>
+  """
+  def page(assigns) do
+    ~H"""
+    <.app flash={@flash} header_class="compact">
+      <div class="page grow my-8">
+        {render_slot(@inner_block)}
+      </div>
+    </.app>
     """
   end
 

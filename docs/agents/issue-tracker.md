@@ -38,10 +38,12 @@ Driven by `/slice` (which wraps `/implement`), not by triage:
 
 `/wayfinder` uses this tracker as follows:
 
-- **Map** = the project's `Spec.md` (`.swamp-vault/Projects/<slug>/Spec.md`), tagged
+- **Map** = the project's `Map.md` (`.swamp-vault/Projects/<slug>/Map.md`), tagged
   `wayfinder-map` in frontmatter. Its body holds the Destination / Notes /
   Decisions so far / Not yet specified / Out of scope sections. One map per
-  project dir.
+  project dir. Distinct from `Spec.md` (the PRD/spec) — a project may have a
+  map without a spec (spec not written yet) or a spec without a map (no
+  wayfinding needed).
 - **Ticket** = a normal issue file under `.swamp-vault/Projects/<slug>/issues/`,
   using the existing `type:` frontmatter (`research | prototype | grilling |
   task` — these are exactly the wayfinder ticket types) and a `## Question`

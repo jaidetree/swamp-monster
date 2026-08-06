@@ -5,7 +5,7 @@ Issues and PRDs live as markdown in the vault at `vault/Projects/<slug>/`. A vis
 ## Conventions
 
 - One feature/PRD per dir: `vault/Projects/<slug>/`. Create with `./new-project.sh <slug>` (from the `setup-project-vault` skill folder).
-- PRD: `vault/Projects/<slug>/PRD.md`.
+- PRD/spec: `vault/Projects/<slug>/Spec.md`.
 - Issues/slices: `vault/Projects/<slug>/issues/<Status>/<NN>-<slug>.md`.
 - **Dev state = the folder** the file sits in: `Backlog / Ready / In Progress / Review / Done / Archived`. Moving the file between these folders is the status change.
 - **Triage role = frontmatter `tags:`** (e.g. `ready-for-agent`) — see `triage-labels.md`. Orthogonal to dev state.
@@ -34,6 +34,25 @@ Driven by `/slice` (which wraps `/implement`), not by triage:
 - **Claim / start work**: move `Ready` → `In Progress`.
 - **Finish**: move `In Progress` → `Review`. Only a human moves `Review` → `Done`.
 
-## Frontier (wayfinder-ready; skill not yet wired)
+## Wayfinding operations
 
-Issues in `Ready/` whose every `blocked_by` stem resolves to a file now in `Done/`. First by number wins.
+`/wayfinder` uses this tracker as follows:
+
+- **Map** = the project's `Spec.md` (`vault/Projects/<slug>/Spec.md`), tagged
+  `wayfinder-map` in frontmatter. Its body holds the Destination / Notes /
+  Decisions so far / Not yet specified / Out of scope sections. One map per
+  project dir.
+- **Ticket** = a normal issue file under `vault/Projects/<slug>/issues/`,
+  using the existing `type:` frontmatter (`research | prototype | grilling |
+  task` — these are exactly the wayfinder ticket types) and a `## Question`
+  body instead of the Issue Template's Description/User Stories sections.
+- **Blocking/frontier**: unchanged from the general convention above —
+  `blocked_by`/`blocks` frontmatter, resolved by filename stem. An unblocked
+  ticket sits in `Ready/`; a ticket blocked on another sits in `Backlog/`
+  until every `blocked_by` stem resolves to a file in `Done/`. The frontier
+  is the set of open, unblocked, unclaimed tickets in `Ready/` — "unclaimed"
+  meaning no assignee convention is used here, so treat any open `Ready/`
+  ticket as claimable.
+- **Resolving a ticket**: append the resolution under the ticket's `##
+  Question` as a `## Resolution` section, move the file to `Done/`, and add
+  a one-line pointer under the map's Decisions so far.

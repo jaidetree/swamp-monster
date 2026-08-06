@@ -43,6 +43,19 @@ custom classes must fully style the input
 - Ensure **clean typography, spacing, and layout balance** for a refined, premium look
 - Focus on **delightful details** like hover effects, loading states, and smooth page transitions
 
+## Agent skills
+
+### Issue tracker
+
+Vault at `vault/Projects/<slug>/`, kanban via Obsidian Bases. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Roles applied as frontmatter `tags:` on vault issue files (no tracker labels). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` + ADRs at `vault/ADRs`. See `docs/agents/domain.md`.
 
 <!-- usage-rules-start -->
 

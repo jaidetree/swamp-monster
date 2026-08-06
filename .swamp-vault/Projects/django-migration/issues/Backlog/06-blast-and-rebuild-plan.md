@@ -1,10 +1,9 @@
 ---
 tags:
-    - ready-for-human
+  - ready-for-human
 type: task
 blocked_by:
-    - "[03-django-scaffolding-tooling](<../Ready/03-django-scaffolding-tooling.md>)"
-    - "[05-fly-deployment-shape](<../Ready/05-fly-deployment-shape.md>)"
+  - "[[/Projects/django-migration/issues/Ready/05-fly-deployment-shape|05-fly-deployment-shape]]"
 ---
 
 # Blast-and-Rebuild Plan

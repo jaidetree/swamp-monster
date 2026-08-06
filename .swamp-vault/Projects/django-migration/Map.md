@@ -36,11 +36,14 @@ via Django admin.
   separately.
 - [[/Projects/django-migration/issues/Done/02-contact-email-provider|Contact-Form Email Provider]] — Postmark,
   via `django-anymail`'s Postmark backend.
+- [[/Projects/django-migration/issues/Done/03-django-scaffolding-tooling|Django Scaffolding & Tooling]] —
+  Python 3.13 / Django 5.2 LTS, `uv`, Nix devShell swapped to Python (keeping
+  Postgres 18 + Node 24), Ruff + mypy/django-stubs, and the existing
+  Tailwind v4 pipeline reused via CLI tools with daisyUI dropped in favor of
+  a single inlined dark theme.
 
 ## Not yet specified
 
-- Testing/CI approach for the Django app — depends on the scaffolding/tooling
-  decision (see the Django scaffolding & tooling ticket).
 - DNS/cutover plan for pointing the live domain at the new Django deploy —
   now also needs to account for repointing DNS away from the placeholder's
   own Fly app (not just pointing DNS at Django for the first time); depends

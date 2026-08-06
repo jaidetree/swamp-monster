@@ -45,6 +45,10 @@ custom classes must fully style the input
 
 ## Agent skills
 
+### Project vault
+
+Vault at `vault/`, home for knowledge notes, ADRs, and reference material. See `docs/agents/vault.md`.
+
 ### Issue tracker
 
 Vault at `vault/Projects/<slug>/`, kanban via Obsidian Bases. See `docs/agents/issue-tracker.md`.

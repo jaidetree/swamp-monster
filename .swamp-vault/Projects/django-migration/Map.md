@@ -34,6 +34,8 @@ via Django admin.
   "coming soon" placeholder today as a bare static page on Fly.io, no
   framework, independent of the Django migration; migration starts fresh
   separately.
+- [[/Projects/django-migration/issues/Done/02-contact-email-provider|Contact-Form Email Provider]] — Postmark,
+  via `django-anymail`'s Postmark backend.
 
 ## Not yet specified
 

@@ -6,7 +6,7 @@ How the engineering skills should consume this repo's domain documentation when 
 
 - **`CONTEXT.md`** at the repo root, or
 - **`CONTEXT-MAP.md`** at the repo root if it exists — it points at one `CONTEXT.md` per context. Read each one relevant to the topic.
-- **`vault/ADRs/`** — read ADRs that touch the area you're about to work in.
+- **`.swamp-vault/ADRs/`** — read ADRs that touch the area you're about to work in.
 
 If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The `/domain-modeling` skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`) creates them lazily when terms or decisions actually get resolved.
 
@@ -17,7 +17,7 @@ Single-context repo (this repo — one Phoenix app, no separate bounded contexts
 ```
 /
 ├── CONTEXT.md
-├── vault/ADRs/
+├── .swamp-vault/ADRs/
 │   ├── 0001-....md
 │   └── 0002-....md
 └── lib/
@@ -30,7 +30,7 @@ Multi-context repo (presence of `CONTEXT-MAP.md` at the root) — not currently 
 ```
 /
 ├── CONTEXT-MAP.md
-├── vault/ADRs/                        ← system-wide decisions
+├── .swamp-vault/ADRs/                        ← system-wide decisions
 └── lib/
     ├── ordering/
     │   └── CONTEXT.md
@@ -38,7 +38,7 @@ Multi-context repo (presence of `CONTEXT-MAP.md` at the root) — not currently 
         └── CONTEXT.md
 ```
 
-Even in the multi-context case, ADRs stay in the single `vault/ADRs` dir — no per-context ADR directories. Use frontmatter or filename prefixes to scope an ADR to a context if needed.
+Even in the multi-context case, ADRs stay in the single `.swamp-vault/ADRs` dir — no per-context ADR directories. Use frontmatter or filename prefixes to scope an ADR to a context if needed.
 
 ## Use the glossary's vocabulary
 

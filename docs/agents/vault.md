@@ -1,20 +1,20 @@
 ---
-vault_dir: vault
+vault_dir: .swamp-vault
 ---
 
 # Project vault
 
-This repo has an [Obsidian project vault](https://github.com/jaidetree/obsidian-project-vault) at `vault/`. It is the home for knowledge notes, reference material, ADRs, and (optionally) issues.
+This repo has an [Obsidian project vault](https://github.com/jaidetree/obsidian-project-vault) at `.swamp-vault/`. It is the home for knowledge notes, reference material, ADRs, and (optionally) issues.
 
-**`vault_dir` above is the single source of truth for the vault's location.** Any skill that needs the vault reads it from here — never guess `vault/`, and never hardcode the name.
+**`vault_dir` above is the single source of truth for the vault's location.** Any skill that needs the vault reads it from here — never guess `.swamp-vault/`, and never hardcode the name.
 
 ## Layout
 
-- `vault/Knowledge/` — standalone zettel notes, one per learning, flat (no subfolders). Written and recalled by `/knowledge`.
-- `vault/Library/` — reference material worth keeping alongside the code.
-- `vault/Domain/`, `vault/ADRs/` — glossary and architectural decisions. See `domain.md`.
-- `vault/Projects/<slug>/` — specs and issues, **only if** the vault is this repo's issue tracker. See `issue-tracker.md` (absent if it isn't).
-- `vault/Templates/` — note templates the vault's own skills copy from.
+- `.swamp-vault/Knowledge/` — standalone zettel notes, one per learning, flat (no subfolders). Written and recalled by `/knowledge`.
+- `.swamp-vault/Library/` — reference material worth keeping alongside the code.
+- `.swamp-vault/Domain/`, `.swamp-vault/ADRs/` — glossary and architectural decisions. See `domain.md`.
+- `.swamp-vault/Projects/<slug>/` — specs and issues, **only if** the vault is this repo's issue tracker. See `issue-tracker.md` (absent if it isn't).
+- `.swamp-vault/Templates/` — note templates the vault's own skills copy from.
 
 ## If this file is absent
 

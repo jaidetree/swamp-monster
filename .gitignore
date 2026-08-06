@@ -38,4 +38,4 @@ npm-debug.log
 postgres_data/
 
 # Obsidian workspace state (local UI state, not project content).
-vault/.obsidian/workspace*
+.swamp-vault/.obsidian/workspace*

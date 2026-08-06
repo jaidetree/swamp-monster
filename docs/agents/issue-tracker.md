@@ -1,27 +1,27 @@
 # Issue tracker: Obsidian project vault
 
-Issues and PRDs live as markdown in the vault at `vault/Projects/<slug>/`. A visual kanban board (Obsidian Bases `.base` file) renders them for humans; agents operate on the files directly.
+Issues and PRDs live as markdown in the vault at `.swamp-vault/Projects/<slug>/`. A visual kanban board (Obsidian Bases `.base` file) renders them for humans; agents operate on the files directly.
 
 ## Conventions
 
-- One feature/PRD per dir: `vault/Projects/<slug>/`. Create with `./new-project.sh <slug>` (from the `setup-project-vault` skill folder).
-- PRD/spec: `vault/Projects/<slug>/Spec.md`.
-- Issues/slices: `vault/Projects/<slug>/issues/<Status>/<NN>-<slug>.md`.
+- One feature/PRD per dir: `.swamp-vault/Projects/<slug>/`. Create with `./new-project.sh <slug>` (from the `setup-project-vault` skill folder).
+- PRD/spec: `.swamp-vault/Projects/<slug>/Spec.md`.
+- Issues/slices: `.swamp-vault/Projects/<slug>/issues/<Status>/<NN>-<slug>.md`.
 - **Dev state = the folder** the file sits in: `Backlog / Ready / In Progress / Review / Done / Archived`. Moving the file between these folders is the status change.
 - **Triage role = frontmatter `tags:`** (e.g. `ready-for-agent`) — see `triage-labels.md`. Orthogonal to dev state.
 - **id = the filename** `NN-slug` (e.g. `03-setup-e2e-harness.md`), numbered from `01`.
 - **Blocking** (frontmatter, wayfinder-ready): `blocked_by` / `blocks` are lists of relative markdown links to the issue files, e.g. `[02-api](<../Ready/02-api.md>)` (frontmatter-links plugin). **Resolve by filename stem, never the folder segment** — files move between folders, so the path in the link goes stale by design.
 - **type** (frontmatter): `research | prototype | grilling | task`.
 
-Issue body template: `vault/Templates/Issue Template.md` (Description / User Stories / Implementation Plan Overview / Acceptance Criteria).
+Issue body template: `.swamp-vault/Templates/Issue Template.md` (Description / User Stories / Implementation Plan Overview / Acceptance Criteria).
 
 ## When a skill says "publish an issue"
 
-Create a new file in `vault/Projects/<slug>/issues/Backlog/` with a `ready-for-agent` tag (or the role instructed).
+Create a new file in `.swamp-vault/Projects/<slug>/issues/Backlog/` with a `ready-for-agent` tag (or the role instructed).
 
 ## When a skill says "fetch the relevant ticket"
 
-Find the file by its `NN-slug` stem anywhere under `vault/Projects/<slug>/issues/` (its folder = current dev state). The user usually passes the number or stem.
+Find the file by its `NN-slug` stem anywhere under `.swamp-vault/Projects/<slug>/issues/` (its folder = current dev state). The user usually passes the number or stem.
 
 ## When a skill sets a triage state
 
@@ -38,11 +38,11 @@ Driven by `/slice` (which wraps `/implement`), not by triage:
 
 `/wayfinder` uses this tracker as follows:
 
-- **Map** = the project's `Spec.md` (`vault/Projects/<slug>/Spec.md`), tagged
+- **Map** = the project's `Spec.md` (`.swamp-vault/Projects/<slug>/Spec.md`), tagged
   `wayfinder-map` in frontmatter. Its body holds the Destination / Notes /
   Decisions so far / Not yet specified / Out of scope sections. One map per
   project dir.
-- **Ticket** = a normal issue file under `vault/Projects/<slug>/issues/`,
+- **Ticket** = a normal issue file under `.swamp-vault/Projects/<slug>/issues/`,
   using the existing `type:` frontmatter (`research | prototype | grilling |
   task` — these are exactly the wayfinder ticket types) and a `## Question`
   body instead of the Issue Template's Description/User Stories sections.

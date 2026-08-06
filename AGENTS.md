@@ -47,11 +47,11 @@ custom classes must fully style the input
 
 ### Project vault
 
-Vault at `vault/`, home for knowledge notes, ADRs, and reference material. See `docs/agents/vault.md`.
+Vault at `.swamp-vault/`, home for knowledge notes, ADRs, and reference material. See `docs/agents/vault.md`.
 
 ### Issue tracker
 
-Vault at `vault/Projects/<slug>/`, kanban via Obsidian Bases. See `docs/agents/issue-tracker.md`.
+Vault at `.swamp-vault/Projects/<slug>/`, kanban via Obsidian Bases. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
@@ -59,7 +59,7 @@ Roles applied as frontmatter `tags:` on vault issue files (no tracker labels). S
 
 ### Domain docs
 
-Single-context: `CONTEXT.md` + ADRs at `vault/ADRs`. See `docs/agents/domain.md`.
+Single-context: `CONTEXT.md` + ADRs at `.swamp-vault/ADRs`. See `docs/agents/domain.md`.
 
 <!-- usage-rules-start -->
 

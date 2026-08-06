@@ -41,6 +41,12 @@ via Django admin.
   Postgres 18 + Node 24), Ruff + mypy/django-stubs, and the existing
   Tailwind v4 pipeline reused via CLI tools with daisyUI dropped in favor of
   a single inlined dark theme.
+- [[/Projects/django-migration/issues/Done/04-cms-content-model|CMS Content Model]] — single
+  `content` app with `Work` (+ `WorkImage` gallery), `Training`, `Resource`,
+  and `ContactSubmission` models; `order`-driven admin via a ported
+  `django-admin-sortable2` pattern from `~/projects/gracie`; Markdown text
+  via `django-markdownify`; storage backend left to the Fly.io deployment
+  ticket.
 
 ## Not yet specified
 
@@ -48,8 +54,6 @@ via Django admin.
   now also needs to account for repointing DNS away from the placeholder's
   own Fly app (not just pointing DNS at Django for the first time); depends
   on the blast-and-rebuild plan.
-- Whether the CMS content-editing experience needs its own prototype pass,
-  once the content-model ticket resolves.
 
 ## Out of scope
 

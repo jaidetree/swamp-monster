@@ -10,7 +10,7 @@ tags:
 Swamp Monster Leather is running on Django in this same repo (replacing the
 never-launched Phoenix app — legacy code preserved on the `legacy-elixir`
 branch), live by October 2026, with full parity to the existing
-[Spec.md](<../swamp-monster-leather/Spec.md>): Home, Contact, Works page, and
+[[/Projects/swamp-monster-leather/Spec|Spec.md]]: Home, Contact, Works page, and
 lightweight CMS contexts for works/training/resources, all content-editable
 via Django admin.
 
@@ -30,20 +30,25 @@ via Django admin.
 
 ## Decisions so far
 
-_(none yet — this map was just charted)_
+- [[/Projects/django-migration/issues/Done/01-placeholder-timing|Placeholder Timing]] — ship the
+  "coming soon" placeholder today as a bare static page on Fly.io, no
+  framework, independent of the Django migration; migration starts fresh
+  separately.
 
 ## Not yet specified
 
 - Testing/CI approach for the Django app — depends on the scaffolding/tooling
   decision (see the Django scaffolding & tooling ticket).
 - DNS/cutover plan for pointing the live domain at the new Django deploy —
-  depends on the placeholder-timing decision and the blast-and-rebuild plan.
+  now also needs to account for repointing DNS away from the placeholder's
+  own Fly app (not just pointing DNS at Django for the first time); depends
+  on the blast-and-rebuild plan.
 - Whether the CMS content-editing experience needs its own prototype pass,
   once the content-model ticket resolves.
 
 ## Out of scope
 
 - Auth/user accounts (no user-facing login) — per the existing
-  [Spec.md](<../swamp-monster-leather/Spec.md>).
+  [[/Projects/swamp-monster-leather/Spec|Spec.md]].
 - E-commerce/checkout — per the existing
-  [Spec.md](<../swamp-monster-leather/Spec.md>).
+  [[/Projects/swamp-monster-leather/Spec|Spec.md]].

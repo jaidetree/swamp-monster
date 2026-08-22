@@ -15,9 +15,20 @@ from django.contrib.admin.sites import site
 from django.test import RequestFactory
 from django.urls import reverse
 
-from content.admin import WorkAdmin, WorkImageInline
-from content.models import Work
-from content.tests.factories import WorkFactory
+from content.admin import (
+    ContactSubmissionAdmin,
+    ResourceAdmin,
+    TrainingAdmin,
+    WorkAdmin,
+    WorkImageInline,
+)
+from content.models import ContactSubmission, Work
+from content.tests.factories import (
+    ContactSubmissionFactory,
+    ResourceFactory,
+    TrainingFactory,
+    WorkFactory,
+)
 
 
 def _instance():
@@ -167,3 +178,103 @@ def test_work_add_form_renders_the_gallery_inline(admin_client):
     response = admin_client.get(reverse("admin:content_work_add"))
     assert response.status_code == 200
     assert "images-TOTAL_FORMS" in response.content.decode()
+
+
+# --- Training/Resource reuse the same sortable-admin base as Work ---
+
+
+def test_training_changelist_is_sortable():
+    assert issubclass(TrainingAdmin, SortableAdminMixin)
+
+
+def test_resource_changelist_is_sortable():
+    assert issubclass(ResourceAdmin, SortableAdminMixin)
+
+
+@pytest.mark.django_db
+def test_training_reorder_endpoint_persists_new_order(admin_client):
+    first = TrainingFactory(order=1)
+    second = TrainingFactory(order=2)
+    url = reverse("admin:content_training_sortable_update")
+
+    response = admin_client.post(
+        url,
+        data=json.dumps({"updatedItems": [[first.pk, 2], [second.pk, 1]]}),
+        content_type="application/json",
+    )
+
+    assert response.status_code == 200
+    first.refresh_from_db()
+    second.refresh_from_db()
+    assert (first.order, second.order) == (2, 1)
+
+
+@pytest.mark.django_db
+def test_resource_reorder_endpoint_persists_new_order(admin_client):
+    first = ResourceFactory(order=1)
+    second = ResourceFactory(order=2)
+    url = reverse("admin:content_resource_sortable_update")
+
+    response = admin_client.post(
+        url,
+        data=json.dumps({"updatedItems": [[first.pk, 2], [second.pk, 1]]}),
+        content_type="application/json",
+    )
+
+    assert response.status_code == 200
+    first.refresh_from_db()
+    second.refresh_from_db()
+    assert (first.order, second.order) == (2, 1)
+
+
+@pytest.mark.django_db
+def test_training_add_form_renders(admin_client):
+    response = admin_client.get(reverse("admin:content_training_add"))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_resource_add_form_renders(admin_client):
+    response = admin_client.get(reverse("admin:content_resource_add"))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_resource_change_form_serves_a_downloadable_file_link(admin_client):
+    resource = ResourceFactory(title="Pattern")
+    response = admin_client.get(reverse("admin:content_resource_change", args=[resource.pk]))
+    assert response.status_code == 200
+    assert resource.file.url in response.content.decode()
+
+
+@pytest.mark.django_db
+def test_resource_file_is_retrievable_via_its_storage():
+    resource = ResourceFactory(title="Pattern")
+    with resource.file.storage.open(resource.file.name) as fh:
+        assert fh.read()
+
+
+# --- ContactSubmission is read-only in admin ---
+
+
+def test_contact_submission_admin_has_no_add_permission():
+    admin_instance = ContactSubmissionAdmin(ContactSubmission, site)
+    assert admin_instance.has_add_permission(RequestFactory().get("/")) is False
+
+
+def test_contact_submission_admin_has_no_change_permission():
+    admin_instance = ContactSubmissionAdmin(ContactSubmission, site)
+    assert admin_instance.has_change_permission(RequestFactory().get("/")) is False
+
+
+def test_contact_submission_admin_has_no_delete_permission():
+    admin_instance = ContactSubmissionAdmin(ContactSubmission, site)
+    assert admin_instance.has_delete_permission(RequestFactory().get("/")) is False
+
+
+@pytest.mark.django_db
+def test_contact_submission_is_visible_in_admin_changelist(admin_client):
+    ContactSubmissionFactory(name="Jamie", email="jamie@example.com")
+    response = admin_client.get(reverse("admin:content_contactsubmission_changelist"))
+    assert response.status_code == 200
+    assert "Jamie" in response.content.decode()

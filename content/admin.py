@@ -1,7 +1,7 @@
 from adminsortable2.admin import SortableAdminMixin, SortableTabularInline
 from django.contrib import admin
 
-from .models import Work, WorkImage
+from .models import ContactSubmission, Resource, Training, Work, WorkImage
 from .ordering import renumber
 
 
@@ -30,9 +30,9 @@ class WorkImageInline(DragNewRowsInline):
     fields = ("order", "image", "caption")
 
 
-@admin.register(Work)
-class WorkAdmin(SortableAdminMixin, admin.ModelAdmin):
-    """Drag-to-reorder changelist for Works.
+class RenumberingSortableAdmin(SortableAdminMixin, admin.ModelAdmin):
+    """Base drag-to-reorder changelist shared by every sortable ``content``
+    model (``Work``, ``Training``, ``Resource``, ...).
 
     Ported from ~/projects/gracie's ``portfolio.admin.SortableProjectAdmin``.
     django-admin-sortable2 inserts a drag handle (``_reorder_``) as the leftmost
@@ -40,7 +40,7 @@ class WorkAdmin(SortableAdminMixin, admin.ModelAdmin):
     ``list_display`` so the handle lands on the left (keeping ``order`` there
     would only shift the handle inward). ``get_fields`` re-adds ``order`` on the
     change form so an editor can still type a number by hand when editing an
-    existing Work; new Works are auto-numbered to the end on add (sortable2's
+    existing row; new rows are auto-numbered to the end on add (sortable2's
     ``save_model``), so the add form omits ``order``.
 
     ``order`` is deliberately *not* in ``list_editable`` (it isn't a displayed
@@ -54,7 +54,6 @@ class WorkAdmin(SortableAdminMixin, admin.ModelAdmin):
     search_fields = ("title",)
     ordering = ("order", "title")
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [WorkImageInline]
 
     class Media:
         # Narrow sortable2's 50px-wide drag-handle column.
@@ -81,3 +80,41 @@ class WorkAdmin(SortableAdminMixin, admin.ModelAdmin):
         renumbered = renumber(rows, field)
         self.model.objects.bulk_update(renumbered, [field])
         return len(renumbered)
+
+
+@admin.register(Work)
+class WorkAdmin(RenumberingSortableAdmin):
+    """Drag-to-reorder changelist for Works, with its drag-sortable gallery
+    inline."""
+
+    inlines = [WorkImageInline]
+
+
+@admin.register(Training)
+class TrainingAdmin(RenumberingSortableAdmin):
+    """Drag-to-reorder changelist for Trainings. No inline: unlike Work,
+    Training has a single plain ``image`` rather than a gallery."""
+
+
+@admin.register(Resource)
+class ResourceAdmin(RenumberingSortableAdmin):
+    """Drag-to-reorder changelist for Resources (icon + downloadable file)."""
+
+
+@admin.register(ContactSubmission)
+class ContactSubmissionAdmin(admin.ModelAdmin):
+    """Read-only, list-only view of contact-form submissions: a log, not
+    owner-curated content, so no add/change permissions are needed."""
+
+    list_display = ("name", "email", "created_at")
+    search_fields = ("name", "email", "message")
+    readonly_fields = ("name", "email", "message", "created_at")
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

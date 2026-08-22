@@ -53,10 +53,10 @@ page exists) persists as a `ContactSubmission` row.
 
 ## Acceptance Criteria
 
-- [ ] Owner can create/edit/delete/reorder `Training` and `Resource`
+- [x] Owner can create/edit/delete/reorder `Training` and `Resource`
       entries through Django admin, mirroring the `Work` sortable-admin UX.
-- [ ] `Resource.file` downloads correctly once retrieved via its
+- [x] `Resource.file` downloads correctly once retrieved via its
       storage-agnostic `FileField`.
-- [ ] `ContactSubmission` rows are visible (read-only) in admin.
-- [ ] `published`/`featured`/`order` filtering is covered by model-level
+- [x] `ContactSubmission` rows are visible (read-only) in admin.
+- [x] `published`/`featured`/`order` filtering is covered by model-level
       tests for both `Training` and `Resource`.

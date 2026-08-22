@@ -73,11 +73,17 @@ Django app, lint/type/test-clean, auto-deployed to staging on push."
 
 ## Acceptance Criteria
 
-- [ ] `manage.py runserver` boots an empty Django project locally via
+- [x] `manage.py runserver` boots an empty Django project locally via
       `nix develop`.
-- [ ] CI (GitHub Actions) runs on push/PR to `main` and passes: tests →
+- [x] CI (GitHub Actions) runs on push/PR to `main` and passes: tests →
       mypy → Ruff format check → Ruff check, in that order, using a
       Nix-provisioned local Postgres.
 - [ ] `fly deploy` against the staging app succeeds, runs migrations via
-      the release command, and serves the app over HTTPS.
-- [ ] Tailwind CSS builds and is served as a static asset via WhiteNoise.
+      the release command, and serves the app over HTTPS. **Not
+      verifiable in this sandbox — no Fly credentials or provisioned
+      staging app available.** `fly.toml`, the Dockerfile, and the
+      release command are written and the image builds/runs/serves
+      correctly locally via `podman build` + `podman run`; the human
+      needs to provision `swamp-monster-leather-staging` and run the
+      first real `fly deploy` (see manual test steps).
+- [x] Tailwind CSS builds and is served as a static asset via WhiteNoise.

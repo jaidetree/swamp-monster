@@ -30,6 +30,7 @@
           shellHook = ''
             echo "Python development environment loaded!"
             echo "Python version: $(python3 --version)"
+            echo "uv version: $(uv --version)"
             echo "Postgres version: $(postgres --version)"
           '';
         };

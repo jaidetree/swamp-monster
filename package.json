@@ -1,0 +1,14 @@
+{
+  "name": "swamp-monster-leather",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i static_src/css/app.css -o static/css/app.css --minify",
+    "watch:css": "tailwindcss -i static_src/css/app.css -o static/css/app.css --watch",
+    "build": "npm run build:css"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.12",
+    "esbuild": "^0.25.4",
+    "tailwindcss": "^4.1.12"
+  }
+}

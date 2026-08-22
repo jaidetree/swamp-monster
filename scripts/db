@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# Local Postgres init/start for dev and CI, driven entirely by env vars
+# (PGDATA/PGHOST/PGDATABASE/PGPORT). Ported from ~/projects/gracie's
+# scripts/db — same pg_ctl/initdb pattern, reused as-is so CI matches
+# local dev exactly instead of depending on a GitHub Actions service
+# container.
 
 set -euo pipefail
 
@@ -7,8 +12,9 @@ function init_db() {
         echo "Initializing PostgreSQL database..."
         initdb -D "$PGDATA" --auth=trust --no-instructions
 
-        # Configure PostgreSQL
-        echo "unix_socket_directories = '$PGDATA'" >> "$PGDATA/postgresql.conf"
+        # Configure PostgreSQL. Socket lives at PGHOST (kept out of PGDATA) so
+        # DATABASE_URL's `host=.pg` resolves to it.
+        echo "unix_socket_directories = '$PGHOST'" >> "$PGDATA/postgresql.conf"
 
         # Start PostgreSQL
         start_db
@@ -54,9 +60,9 @@ function status_db() {
 }
 
 # Check if required environment variables are set
-if [ -z "${PGDATA:-}" ] || [ -z "${PGDATABASE:-}" ] || [ -z "${PGPORT:-}" ]; then
+if [ -z "${PGDATA:-}" ] || [ -z "${PGHOST:-}" ] || [ -z "${PGDATABASE:-}" ] || [ -z "${PGPORT:-}" ]; then
     echo "Error: Required environment variables are not set"
-    echo "Please make sure PGDATA, PGDATABASE, and PGPORT are set in your .envrc"
+    echo "Please make sure PGDATA, PGHOST, PGDATABASE, and PGPORT are set in your .envrc"
     exit 1
 fi
 

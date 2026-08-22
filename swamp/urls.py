@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.http import HttpRequest, HttpResponse
 from django.urls import include, path
 
+from content.views import contact
+
 
 def health(request: HttpRequest) -> HttpResponse:
     """Empty-app smoke-test root: proves the app boots and responds."""
@@ -15,6 +17,7 @@ def health(request: HttpRequest) -> HttpResponse:
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("works/", include("content.urls")),
+    path("contact/", contact, name="contact"),
     path("", health, name="health"),
 ]
 

@@ -156,3 +156,8 @@ ANYMAIL = {
     "POSTMARK_SERVER_TOKEN": env("POSTMARK_SERVER_TOKEN", default=""),
 }
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@swamp-monster-leather.com")
+
+# Where contact-form notification emails are sent — the Swamp Monster inbox.
+CONTACT_NOTIFICATION_EMAIL = env(
+    "CONTACT_NOTIFICATION_EMAIL", default="hello@swamp-monster-leather.com"
+)

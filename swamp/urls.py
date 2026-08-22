@@ -3,19 +3,14 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.http import HttpRequest, HttpResponse
 from django.urls import include, path
 
-
-def health(request: HttpRequest) -> HttpResponse:
-    """Empty-app smoke-test root: proves the app boots and responds."""
-    return HttpResponse("ok")
-
+from content import views as content_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("works/", include("content.urls")),
-    path("", health, name="health"),
+    path("", content_views.home, name="home"),
 ]
 
 if settings.DEBUG:

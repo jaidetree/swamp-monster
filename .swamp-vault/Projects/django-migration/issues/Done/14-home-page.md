@@ -44,11 +44,11 @@ the page still renders sensibly when Training/Resources are empty.
 
 ## Acceptance Criteria
 
-- [ ] `/` renders hero, Works showcase, and Training/Resources/About
+- [x] `/` renders hero, Works showcase, and Training/Resources/About
       footer sections.
-- [ ] Each teaser section queries `published=True, featured=True` ordered
+- [x] Each teaser section queries `published=True, featured=True` ordered
       by `order`, limited to N.
-- [ ] Training/Resources sections render without visual breakage when
+- [x] Training/Resources sections render without visual breakage when
       empty.
-- [ ] View/template tests cover the teaser filtering and the empty-state
+- [x] View/template tests cover the teaser filtering and the empty-state
       case.

@@ -45,3 +45,14 @@ Recommended deployment shape:
 Full sourcing and tradeoffs in the research doc above (research doc itself
 recommended Neon-then-Crunchy-Bridge; superseded by owner preference to go
 straight to Crunchy Bridge, since they can provision it directly).
+
+## Amendment (via [08-dns-cutover-plan](<../Done/08-dns-cutover-plan.md>))
+
+**Media storage superseded: Tigris → Cloudflare R2.** Owner is moving the
+domain's nameservers to Cloudflare (free tier) and wants to use Cloudflare
+R2 buckets for WorkImage uploads instead of Tigris, since they're
+consolidating on the Cloudflare account anyway. `django-storages`'s
+S3-compatible backend still applies — only the endpoint/credentials change.
+This must happen (nameserver move + R2 bucket provisioned, credentials set
+as production secrets) before the Django production deploy, since uploads
+need working storage from cutover onward.

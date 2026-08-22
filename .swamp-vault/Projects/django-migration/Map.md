@@ -52,15 +52,35 @@ via Django admin.
   `release_command` running migrations; Postgres via Crunchy Bridge
   ($10/mo, owner already provisions these directly) instead of Fly's own
   Postgres offerings; static files via WhiteNoise baked into the image;
-  media (WorkImage uploads) via Tigris object storage + `django-storages`,
-  no Fly Volume.
+  media (WorkImage uploads) via `django-storages`, no Fly Volume — **amended
+  by DNS/Cutover Plan**: Cloudflare R2 replaces Tigris, since the domain's
+  nameservers are moving to Cloudflare anyway.
+- [[/Projects/django-migration/issues/Done/06-blast-and-rebuild-plan|Blast-and-Rebuild Plan]] —
+  teardown-first on `main` directly: slice 1 deletes all Elixir-only paths
+  and swaps `flake.nix`/`.envrc` to Python/uv in one commit, moving the
+  reusable `assets/` pieces along with it; a `legacy-elixir` worktree serves
+  as the parity reference during the port instead of a dual-toolchain
+  devShell; everything after is incremental, one commit per slice, no
+  separate final-teardown slice; Fly deploys to a distinct staging app
+  during the port — **superseded in part by DNS/Cutover Plan**: no fresh
+  production app is created, Django is deployed directly into the existing
+  `swamp-monster-leather` app that already serves the placeholder.
+- [[/Projects/django-migration/issues/Done/07-testing-ci-approach|Testing/CI Approach]] —
+  `pytest`/`pytest-django` + Playwright; GitHub Actions, bootstrapped via
+  `nix develop` (no CI Postgres service container — a ported
+  `~/projects/gracie/scripts/db` script starts local Postgres inside the
+  Nix shell instead); single combined job ordered `uv sync` → tests →
+  `mypy` → `ruff format` → `ruff check`; triggers on push/PR to `main`.
+- [[/Projects/django-migration/issues/Done/08-dns-cutover-plan|DNS/Cutover Plan]] —
+  no DNS change and no new app: the placeholder's existing Fly app is
+  already named `swamp-monster-leather` and already holds the live certs,
+  so cutover is just pointing `fly.toml` at that app and deploying —
+  Fly's blue-green release strategy swaps traffic with zero downtime.
+  Staging app destroyed once production is confirmed healthy; rollback is
+  redeploying `placeholder/fly.toml` to the same app. Prerequisite:
+  Cloudflare nameserver move + R2 bucket must land before this deploy.
 
 ## Not yet specified
-
-- DNS/cutover plan for pointing the live domain at the new Django deploy —
-  now also needs to account for repointing DNS away from the placeholder's
-  own Fly app (not just pointing DNS at Django for the first time); depends
-  on the blast-and-rebuild plan.
 
 ## Out of scope
 

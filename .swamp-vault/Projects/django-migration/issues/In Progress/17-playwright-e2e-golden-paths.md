@@ -37,8 +37,8 @@ Contact, Resource download, and the single-dark-theme rendering guarantee.
 
 ## Acceptance Criteria
 
-- [ ] Playwright covers: Home → Works browsing, Work gallery viewing,
+- [x] Playwright covers: Home → Works browsing, Work gallery viewing,
       Contact form submission (success path), and Resource file download.
-- [ ] All four golden-path tests pass in CI using the existing
+- [x] All four golden-path tests pass in CI using the existing
       `playwright install --with-deps` + `actions/cache` setup.
-- [ ] No real Postmark email is sent during the Contact form e2e test.
+- [x] No real Postmark email is sent during the Contact form e2e test.

@@ -9,34 +9,36 @@ description: >-
 
 # Slice
 
-Take one tracked slice of Swamp Monster Leather end-to-end: In Progress → implement →
-commit → Review.
+Take one tracked slice of the Django Migration end-to-end: In Progress →
+implement → commit → Review.
 
 Requires an issue argument (a `NN-slug` stem or number). Resolve it under
-`.swamp-vault/Projects/swamp-monster-leather/issues/**` by filename stem (zero-pad numbers to
+`.swamp-vault/Projects/django-migration/issues/**` by filename stem (zero-pad numbers to
 two digits) — the folder it sits in is its current dev state. If no argument, or
 the target is ambiguous, stop and ask.
 
 ## Steps
 
-1. Read `LEARNINGS.md` if it exists; surface the most relevant points.
-2. Read the slice file, plus its PRD (`.swamp-vault/Projects/swamp-monster-leather/Spec.md`),
-   `CONTEXT.md`, and any `.swamp-vault/ADRs` it touches. Stop if the issue isn't
+1. Read a knowledge summary: `scan-knowledge.sh .swamp-vault/Knowledge` (from
+   the `knowledge` skill); surface the most relevant points.
+2. Read the slice file, plus its spec (`.swamp-vault/Projects/django-migration/Spec.md`),
+   `.swamp-vault/Domain/CONTEXT.md`, and any `.swamp-vault/ADRs` it touches. Stop if the issue isn't
    found — report what failed.
-3. Move the slice file `Ready` → `In Progress` (folder = dev state; see
+3. Move the slice file (from `Ready` or, if `/afk` dispatched it straight from
+   `Backlog`, from `Backlog`) → `In Progress` (folder = dev state; see
    `docs/agents/issue-tracker.md`).
-4. `/implement` the slice as specified. Follow project conventions: one Phoenix
-   context per module in `lib/swamp/`, LiveViews/controllers/components in
-   `lib/swamp_web/`; follow AGENTS.md's Phoenix v1.8, Elixir, and LiveView
-   guidelines (e.g. `<Layouts.app>` wrapper, `<.input>`/`<.icon>` components, no
-   nested modules per file). Write/update tests at the seams the issue names.
-5. Verify: `mix compile --warnings-as-errors` and `mix format --check-formatted`
-   and `mix test`. On failure, fix and **goto 4**.
+4. `/implement` the slice as specified. Follow project conventions: Python
+   3.13, Django 5.2, `uv`-managed deps; one Django app per bounded context;
+   Tailwind v4 CSS/static assets under Django's `STATICFILES_DIRS`. Write/update
+   tests at the seams the issue names.
+5. Verify: `pytest` (incl. Playwright) and `mypy` and `ruff format --check`
+   and `ruff check`. On failure, fix and **goto 4**.
 6. Commit: `/commit <slice description>`. Skip if nothing to commit; never
    commit partial or failing work.
 7. Move the slice file `In Progress` → `Review` — this signals it awaits human
    testing. Check off the acceptance-criteria `- [ ]` boxes that now hold. Only
    a human moves it to `Done`.
-8. Run `/update-learnings` to capture what worked, what broke, and non-obvious
-   domain facts. Be selective.
+8. Run `/knowledge` to record findings — what worked, what broke, and
+   non-obvious domain facts — as notes in `.swamp-vault/Knowledge/`. Be
+   selective.
 9. Report a list of manual testing steps for humans.

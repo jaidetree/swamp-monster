@@ -50,12 +50,26 @@ provides ahead of production cutover.
 
 ## Acceptance Criteria
 
-- [ ] All CMS media fields (`WorkImage.image`, `Training.image`,
+- [x] All CMS media fields (`WorkImage.image`, `Training.image`,
       `Resource.icon`, `Resource.file`) save to and retrieve from the
-      configured R2-backed storage, not local disk.
-- [ ] Static files (Tailwind CSS output) remain served via WhiteNoise,
-      unaffected by the media storage change.
-- [ ] Required R2 environment variables are documented for the production
-      cutover ticket.
-- [ ] A test verifies upload/retrieval against a test/sandbox or mocked
+      configured R2-backed storage, not local disk. Verified with
+      fake-but-well-formed R2 credentials against `moto`'s mocked
+      S3-compatible backend (`tests/test_media_storage.py`) — no real R2
+      bucket exists in this sandbox, so this is not verified against a
+      live Cloudflare R2 bucket. All four fields share the same
+      `STORAGES["default"]` config; none override `storage=` directly.
+- [x] Static files (Tailwind CSS output) remain served via WhiteNoise,
+      unaffected by the media storage change. `STORAGES["staticfiles"]`
+      untouched; covered by
+      `test_staticfiles_backend_stays_on_whitenoise_when_r2_configured`.
+- [x] Required R2 environment variables are documented for the production
+      cutover ticket. See `swamp/settings.py` comment above the R2 block
+      and the "Media storage" section of `README.md`:
+      `R2_BUCKET_NAME`, `R2_ENDPOINT_URL`, `R2_ACCESS_KEY_ID`,
+      `R2_SECRET_ACCESS_KEY`.
+- [x] A test verifies upload/retrieval against a test/sandbox or mocked
       S3-compatible backend, with no real credentials in the repo or CI.
+      `tests/test_media_storage.py` covers: fallback to
+      `FileSystemStorage` when R2 env vars are absent, `S3Storage`
+      construction with correct options when present, and a full
+      save/exists/read round-trip against `moto`'s mocked S3.

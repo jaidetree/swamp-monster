@@ -45,6 +45,28 @@ uv run ruff format --check .
 uv run ruff check .
 ```
 
+## Media storage
+
+CMS media (`WorkImage.image`, `Training.image`, `Resource.icon`,
+`Resource.file`) is served from Cloudflare R2 (S3-compatible, via
+`django-storages`) in production, and falls back to local filesystem
+storage (`MEDIA_ROOT`) whenever the R2 env vars below aren't set — which is
+the case in local dev and CI, so no credentials are required to run this
+project locally.
+
+Set these as Fly secrets for production (see ticket 18, production
+cutover) — all four must be set together to activate R2:
+
+| Env var                 | Value                                                     |
+| ------------------------ | ---------------------------------------------------------- |
+| `R2_BUCKET_NAME`         | R2 bucket name                                            |
+| `R2_ENDPOINT_URL`        | R2 S3-compatible endpoint, e.g. `https://<account_id>.r2.cloudflarestorage.com` |
+| `R2_ACCESS_KEY_ID`       | R2 API token access key                                   |
+| `R2_SECRET_ACCESS_KEY`   | R2 API token secret key                                   |
+
+Static files (Tailwind CSS output) are unaffected — they're always served
+via WhiteNoise from `STATIC_ROOT`, regardless of R2 configuration.
+
 ## Deploy
 
 Hand-written `Dockerfile` (uv-based, `python:3.13-slim`), `fly.toml` targets

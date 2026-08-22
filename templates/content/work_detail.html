@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load markdownify %}
+
+{% block title %}{{ work.title }} — Swamp Monster Leather{% endblock %}
+
+{% block content %}
+<h1>{{ work.title }}</h1>
+{% if work.description %}
+<div class="work-description">{{ work.description|markdownify }}</div>
+{% endif %}
+
+<ul class="work-gallery">
+	{% for image in images %}
+	<li class="work-gallery-image">
+		<img src="{{ image.image.url }}" alt="{{ work.title }}">
+		{% if image.caption %}
+		<div class="caption">{{ image.caption|markdownify }}</div>
+		{% endif %}
+	</li>
+	{% endfor %}
+</ul>
+{% endblock %}

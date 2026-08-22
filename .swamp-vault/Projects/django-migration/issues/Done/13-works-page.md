@@ -40,9 +40,9 @@ Work's full image gallery with captions.
 
 ## Acceptance Criteria
 
-- [ ] `/works` lists every `published=True` `Work`, ordered by `order`
+- [x] `/works` lists every `published=True` `Work`, ordered by `order`
       ascending, excluding unpublished Works.
-- [ ] Each Work's gallery view renders all its `WorkImage`s in `order`,
+- [x] Each Work's gallery view renders all its `WorkImage`s in `order`,
       with captions rendered as Markdown.
-- [ ] View/template tests cover the `published` filter and gallery
+- [x] View/template tests cover the `published` filter and gallery
       rendering.

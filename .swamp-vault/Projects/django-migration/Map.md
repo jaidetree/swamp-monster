@@ -49,10 +49,11 @@ via Django admin.
   ticket.
 - [[/Projects/django-migration/issues/Done/05-fly-deployment-shape|Fly.io Deployment Shape]] —
   hand-written `uv`-based Dockerfile + gunicorn; `fly.toml` with
-  `release_command` running migrations; Postgres via Neon free tier (upgrade
-  path: Crunchy Bridge $10/mo) instead of Fly's own Postgres offerings;
-  static files via WhiteNoise baked into the image; media (WorkImage
-  uploads) via Tigris object storage + `django-storages`, no Fly Volume.
+  `release_command` running migrations; Postgres via Crunchy Bridge
+  ($10/mo, owner already provisions these directly) instead of Fly's own
+  Postgres offerings; static files via WhiteNoise baked into the image;
+  media (WorkImage uploads) via Tigris object storage + `django-storages`,
+  no Fly Volume.
 
 ## Not yet specified
 

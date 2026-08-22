@@ -33,12 +33,15 @@ Recommended deployment shape:
   `manage.py migrate`. No `[[mounts]]`, no `[[statics]]`.
 - **Postgres**: skip both unmanaged Fly Postgres (Fly no longer supports it)
   and Fly Managed Postgres ($38/mo floor, oversized). Use an external
-  managed provider — **Neon free tier** to start, **Crunchy Bridge ($10/mo)**
-  as the upgrade path if autosuspend cold-starts become annoying.
+  managed provider — **Crunchy Bridge ($10/mo)**, since the owner already
+  has the ability to spin up Crunchy Bridge databases directly (no need for
+  a Neon free-tier stopgap first).
 - **Static files**: **WhiteNoise**, baked into the image at build time.
 - **Media** (WorkImage gallery uploads): **Tigris** (Fly's native
   S3-compatible object storage) via `django-storages` — not a Fly Volume,
   since Fly's own guide steers media uploads toward S3-compatible storage
   instead.
 
-Full sourcing and tradeoffs in the research doc above.
+Full sourcing and tradeoffs in the research doc above (research doc itself
+recommended Neon-then-Crunchy-Bridge; superseded by owner preference to go
+straight to Crunchy Bridge, since they can provision it directly).

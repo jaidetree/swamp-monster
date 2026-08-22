@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Swamp Monster Leather — Handcrafted Leather Goods{% endblock %}
+
+{% block content %}
+<section class="border-b border-gold/20">
+	<div class="container py-24 flex flex-col items-start gap-4">
+		<h1 class="font-display text-4xl text-gold">Swamp Monster Leather</h1>
+		<p class="font-body text-lg max-w-xl">
+			Handcrafted leather goods, built one stitch at a time in Gowanus,
+			Brooklyn.
+		</p>
+		<a href="{% url 'content:work_list' %}" class="btn btn-ghost">View the Portfolio</a>
+	</div>
+</section>
+
+<section class="py-16">
+	<div class="container">
+		<header class="mb-8">
+			<h2 class="font-display text-2xl text-gold">Work</h2>
+			<p class="font-body text-sm text-base-content/75">A selection of recent pieces.</p>
+		</header>
+		{% if works %}
+		<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+			{% for work in works %}
+			<li>
+				<a href="{% url 'content:work_detail' work.slug %}" class="group block">
+					{% if work.thumbnail %}
+					<img
+						src="{{ work.thumbnail.image.url }}"
+						alt="{{ work.title }}"
+						class="h-56 w-full rounded-sm border border-gold/40 object-cover"
+					>
+					{% endif %}
+					<span class="font-base-thick mt-2 block group-hover:text-gold transition-colors duration-300">{{ work.title }}</span>
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+</section>
+
+<footer class="border-t border-gold/20">
+	<div class="container grid grid-cols-1 gap-12 py-16 md:grid-cols-3">
+		<section>
+			<h2 class="font-display text-xl text-gold">Training</h2>
+			<p class="font-body text-sm text-base-content/75 mt-2">
+				Learn to craft your own leather goods with private training
+				sessions.
+			</p>
+			{% if trainings %}
+			<ul class="mt-6 flex flex-col gap-2">
+				{% for training in trainings %}
+				<li class="font-base-thick">{{ training.title }}</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+		</section>
+
+		<section>
+			<h2 class="font-display text-xl text-gold">Resources</h2>
+			<p class="font-body text-sm text-base-content/75 mt-2">
+				Free templates and guides for your own projects.
+			</p>
+			{% if resources %}
+			<ul class="mt-6 flex flex-col gap-2">
+				{% for resource in resources %}
+				<li>
+					<a href="{{ resource.file.url }}" class="font-base-thick hover:text-gold transition-colors duration-300">{{ resource.title }}</a>
+				</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+		</section>
+
+		<section>
+			<h2 class="font-display text-xl text-gold">About</h2>
+			<p class="font-body text-sm text-base-content/75 mt-2">Based in Gowanus, Brooklyn, New York.</p>
+		</section>
+	</div>
+</footer>
+{% endblock %}

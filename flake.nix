@@ -14,9 +14,8 @@
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            elixir
-            erlang
-            lexical
+            python313
+            uv
 
             nodejs_24
 
@@ -29,8 +28,9 @@
 
           # Shell hook for additional environment setup
           shellHook = ''
-            echo "Elixir development environment loaded!"
-            echo "Elixir version: $(elixir --version)"
+            echo "Python development environment loaded!"
+            echo "Python version: $(python3 --version)"
+            echo "uv version: $(uv --version)"
             echo "Postgres version: $(postgres --version)"
           '';
         };

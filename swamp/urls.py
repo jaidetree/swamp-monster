@@ -10,6 +10,7 @@ from content import views as content_views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("works/", include("content.urls")),
+    path("contact/", content_views.contact, name="contact"),
     path("", content_views.home, name="home"),
 ]
 

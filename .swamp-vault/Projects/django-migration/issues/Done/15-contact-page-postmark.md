@@ -43,12 +43,12 @@ the Swamp Monster inbox via Postmark.
 
 ## Acceptance Criteria
 
-- [ ] `/contact` renders a form for `name`/`email`/`message` with
+- [x] `/contact` renders a form for `name`/`email`/`message` with
       server-side validation and error display.
-- [ ] A valid submission creates a `ContactSubmission` row.
-- [ ] A valid submission triggers a Postmark send via `django-anymail`.
-- [ ] An email-send failure does not prevent or roll back the
+- [x] A valid submission creates a `ContactSubmission` row.
+- [x] A valid submission triggers a Postmark send via `django-anymail`.
+- [x] An email-send failure does not prevent or roll back the
       `ContactSubmission` row from being persisted.
-- [ ] Tests cover validation, successful submission, and the
+- [x] Tests cover validation, successful submission, and the
       email-failure-doesn't-block-persistence case, using Anymail's
       test/dummy backend.

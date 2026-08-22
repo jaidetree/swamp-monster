@@ -35,7 +35,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "adminsortable2",
+    "markdownify",
     "anymail",
+    "content",
 ]
 
 MIDDLEWARE = [
@@ -115,7 +118,36 @@ STORAGES = {
     },
 }
 
+# Media — owner-uploaded Work/WorkImage/etc files. Local filesystem storage
+# only (the "default" entry in STORAGES above); the concrete Cloudflare R2
+# backend lands in a later ticket (16-media-storage-cloudflare-r2).
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# django-markdownify — renders `content` app Markdown fields (Work.description,
+# WorkImage.caption, ...) via the `|markdownify` template filter. A restrictive
+# allowed-tags whitelist: enough for prose (paragraphs, emphasis, links, lists)
+# with no raw HTML/script/embed surface for owner-authored content.
+MARKDOWNIFY = {
+    "default": {
+        "WHITELIST_TAGS": [
+            "a",
+            "b",
+            "blockquote",
+            "em",
+            "i",
+            "li",
+            "ol",
+            "p",
+            "strong",
+            "ul",
+        ],
+        "WHITELIST_ATTRS": ["href", "title"],
+        "WHITELIST_PROTOCOLS": ["http", "https", "mailto"],
+    },
+}
 
 # Email — mapped from lib/swamp/mailer.ex (Swoosh.Mailer). Config only: no
 # Postmark API key is required to wire the setting itself, only to send.

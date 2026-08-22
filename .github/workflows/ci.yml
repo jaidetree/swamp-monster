@@ -31,6 +31,13 @@ jobs:
       - name: Build Tailwind CSS
         run: nix develop -c npm run build:css
 
+      - name: Collect static files
+        # WhiteNoise's CompressedManifestStaticFilesStorage (STORAGES["staticfiles"])
+        # needs its manifest built before any test that renders a template with a
+        # {% static %} tag (e.g. Django admin pages) — same step the Dockerfile
+        # runs at image build time.
+        run: nix develop -c uv run python manage.py collectstatic --noinput
+
       - name: Start local Postgres
         run: |
           mkdir -p "$PGHOST"

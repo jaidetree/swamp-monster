@@ -10,6 +10,9 @@ dependencies = [
     "django-anymail>=11.1",
     "whitenoise>=6.7",
     "gunicorn>=23.0",
+    "django-admin-sortable2>=2.3.1",
+    "django-markdownify>=0.9.7",
+    "pillow>=12.3.0",
 ]
 
 [dependency-groups]
@@ -21,6 +24,7 @@ dev = [
     "pytest-django>=4.9",
     "playwright>=1.48",
     "pytest-playwright>=0.5",
+    "factory-boy>=3.3.3",
 ]
 
 [tool.pytest.ini_options]
@@ -38,6 +42,10 @@ django_settings_module = "swamp.settings"
 
 [[tool.mypy.overrides]]
 module = "environ.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "adminsortable2.*"
 ignore_missing_imports = true
 
 [tool.ruff]

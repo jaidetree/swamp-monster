@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "adminsortable2",
     "markdownify",
     "anymail",
@@ -109,7 +110,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STORAGES = {
+STORAGES: dict[str, dict[str, object]] = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
@@ -118,11 +119,43 @@ STORAGES = {
     },
 }
 
-# Media — owner-uploaded Work/WorkImage/etc files. Local filesystem storage
-# only (the "default" entry in STORAGES above); the concrete Cloudflare R2
-# backend lands in a later ticket (16-media-storage-cloudflare-r2).
+# Media — owner-uploaded Work/WorkImage/Training/Resource files. Routed
+# through Cloudflare R2 (S3-compatible, via django-storages) when the R2
+# env vars below are set; falls back to local filesystem storage (the
+# STORAGES["default"] set above) when they are not, which is the case in
+# local dev and CI. Individual model fields never set storage= directly —
+# they all pick up whichever backend STORAGES["default"] resolves to.
+#
+# Required env vars for R2 (set as Fly secrets in production — see ticket
+# 18, production cutover):
+#   R2_BUCKET_NAME       — the R2 bucket name
+#   R2_ENDPOINT_URL       — R2 S3-compatible endpoint, e.g.
+#                           https://<account_id>.r2.cloudflarestorage.com
+#   R2_ACCESS_KEY_ID      — R2 API token access key
+#   R2_SECRET_ACCESS_KEY  — R2 API token secret key
+# All four must be set for R2 storage to activate; if any/all are absent,
+# Django falls back to FileSystemStorage under MEDIA_ROOT.
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+R2_BUCKET_NAME = env("R2_BUCKET_NAME", default=None)
+if R2_BUCKET_NAME:
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": R2_BUCKET_NAME,
+            "endpoint_url": env("R2_ENDPOINT_URL"),
+            "access_key": env("R2_ACCESS_KEY_ID"),
+            "secret_key": env("R2_SECRET_ACCESS_KEY"),
+            # R2 has no region concept but boto3 requires one; "auto" is
+            # R2's documented value.
+            "region_name": "auto",
+            # R2 doesn't support the ACL query param S3 uses by default.
+            "default_acl": None,
+            "querystring_auth": False,
+            "file_overwrite": False,
+        },
+    }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

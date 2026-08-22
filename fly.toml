@@ -1,9 +1,14 @@
-# Distinct staging Fly app used during the Django port — NOT the production
-# app (swamp-monster-leather), which stays pointed at the placeholder until
-# cutover. The human provisions this app (`fly apps create
-# swamp-monster-leather-staging`) and runs the first real `fly deploy`;
-# nothing here can be verified without Fly credentials.
-app = "swamp-monster-leather-staging"
+# Production Fly app (ticket 18 cutover) — the existing live app that
+# previously served the placeholder. Real production DNS/certs already
+# point here; deploying this file swaps it from the placeholder to Django
+# via Fly's blue-green release, with no DNS change.
+#
+# During the port (ticket 10 through 17), this file targeted the temporary
+# staging app `swamp-monster-leather-staging`, which is destroyed as part
+# of this cutover (see CUTOVER-RUNBOOK.md). If a rollback is ever needed,
+# redeploy `placeholder/fly.toml` to this same app name instead of editing
+# this file.
+app = "swamp-monster-leather"
 primary_region = "ewr"
 
 [build]

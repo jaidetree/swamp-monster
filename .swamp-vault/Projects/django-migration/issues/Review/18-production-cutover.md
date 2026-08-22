@@ -57,6 +57,24 @@ secrets, before this ticket's deploy step can run.
   another blue-green swap in reverse. `placeholder/` stays in the repo
   until production is trusted.
 
+## Agent Note (moved to Review)
+
+The code-level prep for this ticket is done: `fly.toml`'s `app` now targets
+the existing production app `swamp-monster-leather` (previously
+`swamp-monster-leather-staging` during the port; see the comment left in
+`fly.toml`), and
+[[/Projects/django-migration/CUTOVER-RUNBOOK|CUTOVER-RUNBOOK]] documents
+every remaining command in order.
+
+Every acceptance criterion below requires live, credentialed, irreversible
+actions against real production infrastructure (setting real secrets,
+running a real `fly deploy` against the live domain, destroying a real Fly
+app) that this agent has no credentials for and would not run even if it
+did — those are deliberately left to the site owner to execute by hand
+using the runbook. **No box below is checked.** The site owner should check
+each one off as they complete the corresponding runbook step, then move
+this ticket to Done.
+
 ## Acceptance Criteria
 
 - [ ] `fly.toml` targets the existing `swamp-monster-leather` app; no new

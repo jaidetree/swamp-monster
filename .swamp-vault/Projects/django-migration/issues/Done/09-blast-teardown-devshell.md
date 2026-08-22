@@ -46,11 +46,11 @@ port.
 
 ## Acceptance Criteria
 
-- [ ] `lib/`, `mix.exs`, `mix.lock`, `config/`, `priv/`, `test/`,
+- [x] `lib/`, `mix.exs`, `mix.lock`, `config/`, `priv/`, `test/`,
       `.formatter.exs` are removed from `main`.
-- [ ] `nix develop` on `main` provides Python 3.13, `uv`, Postgres 18, and
+- [x] `nix develop` on `main` provides Python 3.13, `uv`, Postgres 18, and
       Node 24, with no Elixir/Erlang tooling present.
-- [ ] `assets/css/app.css` and `assets/vendor/*` exist at their new
+- [x] `assets/css/app.css` and `assets/vendor/*` exist at their new
       Django-appropriate static location, moved (not recreated).
-- [ ] A `legacy-elixir` worktree exists and its devShell still runs the
+- [x] A `legacy-elixir` worktree exists and its devShell still runs the
       original Phoenix app for comparison.

@@ -1,0 +1,20 @@
+# Distinct staging Fly app used during the Django port — NOT the production
+# app (swamp-monster-leather), which stays pointed at the placeholder until
+# cutover. The human provisions this app (`fly apps create
+# swamp-monster-leather-staging`) and runs the first real `fly deploy`;
+# nothing here can be verified without Fly credentials.
+app = "swamp-monster-leather-staging"
+primary_region = "ewr"
+
+[build]
+
+[deploy]
+  release_command = "/app/manage.py migrate --noinput"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]

@@ -33,3 +33,12 @@ postgres_data/
 
 # Obsidian workspace state (local UI state, not project content).
 .swamp-vault/.obsidian/workspace*
+
+# Stale Elixir artifacts (repo was migrated off Phoenix, see db69f21)
+/_build/
+/deps/
+/priv/
+erl_crash.dump
+.elixir-tools/
+.elixir_ls/
+.lexical/

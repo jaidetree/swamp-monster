@@ -1,6 +1,6 @@
 import factory
 
-from content.models import ContactSubmission, Resource, Training, Work, WorkImage
+from swamp.models import ContactSubmission, Resource, Training, Work, WorkImage
 
 
 class WorkFactory(factory.django.DjangoModelFactory):

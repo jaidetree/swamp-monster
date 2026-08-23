@@ -1,11 +1,11 @@
-"""Models for the `content` app — owner-editable site content (ADR: CMS Content
+"""Models for the `swamp` app — owner-editable site content (ADR: CMS Content
 Model).
 
 ``Work`` is the first and most complex model, establishing the sortable-admin
 pattern (ported from ~/projects/gracie) the rest of this app's models reuse:
 an explicit ``order`` field, excluded from the admin changelist/list_editable
 so a drag handle can occupy the leftmost column instead, renumbered 1..N after
-every drag via ``content.ordering.renumber``.
+every drag via ``swamp.ordering.renumber``.
 """
 
 from django.db import models

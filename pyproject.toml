@@ -30,7 +30,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "swamp.settings"
+DJANGO_SETTINGS_MODULE = "config.settings"
 python_files = ["test_*.py", "*_test.py", "tests.py"]
 
 [tool.mypy]
@@ -40,7 +40,7 @@ mypy_path = "."
 exclude = ["staticfiles/", "static/"]
 
 [tool.django-stubs]
-django_settings_module = "swamp.settings"
+django_settings_module = "config.settings"
 
 [[tool.mypy.overrides]]
 module = "environ.*"
@@ -67,4 +67,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["swamp"]
+packages = ["config", "swamp"]

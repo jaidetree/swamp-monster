@@ -11,7 +11,7 @@ WORKDIR /app
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
     PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=swamp.settings \
+    DJANGO_SETTINGS_MODULE=config.settings \
     PATH="/app/.venv/bin:$PATH"
 
 # Install Python deps first so dependency layers cache independently of
@@ -33,7 +33,7 @@ RUN npm ci && npm run build:css && rm -rf node_modules
 
 # SECRET_KEY/DATABASE_URL aren't needed for collectstatic (no DB access,
 # and STATIC_URL doesn't depend on secrets), but Django's settings module
-# still imports cleanly without them since swamp/settings.py only reads
+# still imports cleanly without them since config/settings.py only reads
 # what it needs lazily via django-environ defaults. Use the venv's own
 # python directly (not `uv run`) so this doesn't trigger a dev-dependency
 # resync at build or run time.
@@ -41,4 +41,4 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-CMD ["gunicorn", "swamp.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]

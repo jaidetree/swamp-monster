@@ -10,7 +10,7 @@
 			Handcrafted leather goods, built one stitch at a time in Gowanus,
 			Brooklyn.
 		</p>
-		<a href="{% url 'content:work_list' %}" class="btn btn-ghost">View the Portfolio</a>
+		<a href="{% url 'swamp:work_list' %}" class="btn btn-ghost">View the Portfolio</a>
 	</div>
 </section>
 
@@ -24,7 +24,7 @@
 		<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 			{% for work in works %}
 			<li>
-				<a href="{% url 'content:work_detail' work.slug %}" class="group block">
+				<a href="{% url 'swamp:work_detail' work.slug %}" class="group block">
 					{% if work.thumbnail %}
 					<img
 						src="{{ work.thumbnail.image.url }}"

@@ -19,7 +19,7 @@ class DragNewRowsInline(SortableTabularInline):
     """
 
     class Media:
-        js = ("content/inline_sortable_new.js",)
+        js = ("swamp/inline_sortable_new.js",)
 
 
 class WorkImageInline(DragNewRowsInline):
@@ -57,7 +57,7 @@ class RenumberingSortableAdmin(SortableAdminMixin, admin.ModelAdmin):
 
     class Media:
         # Narrow sortable2's 50px-wide drag-handle column.
-        css = {"all": ("content/sortable_admin.css",)}
+        css = {"all": ("swamp/sortable_admin.css",)}
 
     def get_fields(self, request, obj=None):
         fields = list(super().get_fields(request, obj))

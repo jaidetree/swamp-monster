@@ -5,8 +5,8 @@ views rely on) plus slug/thumbnail seams.
 
 import pytest
 
-from content.models import ContactSubmission, Resource, Training, Work
-from content.tests.factories import (
+from swamp.models import ContactSubmission, Resource, Training, Work
+from swamp.tests.factories import (
     ContactSubmissionFactory,
     ResourceFactory,
     TrainingFactory,

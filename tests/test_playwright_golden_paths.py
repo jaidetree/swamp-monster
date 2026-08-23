@@ -5,7 +5,7 @@ Contact form, and a Resource download from the Home page's footer.
 These exercise the real rendered pages end-to-end — a live Django server
 (`live_server`, pytest-django) driven by a real Chromium browser
 (`page`, pytest-playwright) — rather than views/templates in isolation
-(covered separately in `content/tests/`).
+(covered separately in `swamp/tests/`).
 """
 
 import importlib
@@ -14,8 +14,8 @@ import pytest
 from django.test import override_settings
 from playwright.sync_api import expect
 
-import swamp.urls as urls_module
-from content.tests.factories import ResourceFactory, WorkFactory, WorkImageFactory
+import config.urls as urls_module
+from swamp.tests.factories import ResourceFactory, WorkFactory, WorkImageFactory
 
 TEST_EMAIL_BACKEND = "anymail.backends.test.EmailBackend"
 
@@ -24,10 +24,10 @@ TEST_EMAIL_BACKEND = "anymail.backends.test.EmailBackend"
 def local_media_serving(settings):
     """Make local MEDIA_ROOT fetchable over the live server for this test only.
 
-    `swamp/urls.py` only appends the local-media `static()` patterns when
+    `config/urls.py` only appends the local-media `static()` patterns when
     `DEBUG` is True — production always serves media from Cloudflare R2 (ticket
     16), so that gate is dev/test-only convenience and stays untouched in
-    `swamp/settings.py`. Verifying an actual Resource download needs the file
+    `config/settings.py`. Verifying an actual Resource download needs the file
     reachable over HTTP, so flip `DEBUG` on and reload the already-imported
     urlconf module for the duration of this test, then put both back — this
     only affects this process's in-memory urlconf, not the settings file.

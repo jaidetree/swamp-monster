@@ -15,15 +15,15 @@ from django.contrib.admin.sites import site
 from django.test import RequestFactory
 from django.urls import reverse
 
-from content.admin import (
+from swamp.admin import (
     ContactSubmissionAdmin,
     ResourceAdmin,
     TrainingAdmin,
     WorkAdmin,
     WorkImageInline,
 )
-from content.models import ContactSubmission, Work
-from content.tests.factories import (
+from swamp.models import ContactSubmission, Work
+from swamp.tests.factories import (
     ContactSubmissionFactory,
     ResourceFactory,
     TrainingFactory,
@@ -116,7 +116,7 @@ def test_editing_existing_work_does_not_renumber():
 def test_reorder_endpoint_persists_new_order(admin_client):
     first = WorkFactory(order=1)
     second = WorkFactory(order=2)
-    url = reverse("admin:content_work_sortable_update")
+    url = reverse("admin:swamp_work_sortable_update")
 
     response = admin_client.post(
         url,
@@ -137,7 +137,7 @@ def test_reorder_cleans_up_gaps_across_whole_collection(admin_client):
     a = WorkFactory(order=1)
     b = WorkFactory(order=5)
     c = WorkFactory(order=9)
-    url = reverse("admin:content_work_sortable_update")
+    url = reverse("admin:swamp_work_sortable_update")
 
     # Drag c to the front (the JS sends only the moved item's new span order).
     response = admin_client.post(
@@ -155,7 +155,7 @@ def test_reorder_cleans_up_gaps_across_whole_collection(admin_client):
 
 @pytest.mark.django_db
 def test_reorder_endpoint_rejects_get(admin_client):
-    url = reverse("admin:content_work_sortable_update")
+    url = reverse("admin:swamp_work_sortable_update")
     assert admin_client.get(url).status_code == 405
 
 
@@ -166,7 +166,7 @@ def test_work_image_inline_ships_new_row_promoter():
     # The promoter script (which makes added-but-unsaved rows drag-sortable)
     # is wired through Media, so the change/add page actually loads it.
     media = WorkImageInline(Work, site).media
-    assert "content/inline_sortable_new.js" in media._js
+    assert "swamp/inline_sortable_new.js" in media._js
 
 
 def test_work_image_inline_shows_no_blank_row_by_default():
@@ -175,7 +175,7 @@ def test_work_image_inline_shows_no_blank_row_by_default():
 
 @pytest.mark.django_db
 def test_work_add_form_renders_the_gallery_inline(admin_client):
-    response = admin_client.get(reverse("admin:content_work_add"))
+    response = admin_client.get(reverse("admin:swamp_work_add"))
     assert response.status_code == 200
     assert "images-TOTAL_FORMS" in response.content.decode()
 
@@ -195,7 +195,7 @@ def test_resource_changelist_is_sortable():
 def test_training_reorder_endpoint_persists_new_order(admin_client):
     first = TrainingFactory(order=1)
     second = TrainingFactory(order=2)
-    url = reverse("admin:content_training_sortable_update")
+    url = reverse("admin:swamp_training_sortable_update")
 
     response = admin_client.post(
         url,
@@ -213,7 +213,7 @@ def test_training_reorder_endpoint_persists_new_order(admin_client):
 def test_resource_reorder_endpoint_persists_new_order(admin_client):
     first = ResourceFactory(order=1)
     second = ResourceFactory(order=2)
-    url = reverse("admin:content_resource_sortable_update")
+    url = reverse("admin:swamp_resource_sortable_update")
 
     response = admin_client.post(
         url,
@@ -229,20 +229,20 @@ def test_resource_reorder_endpoint_persists_new_order(admin_client):
 
 @pytest.mark.django_db
 def test_training_add_form_renders(admin_client):
-    response = admin_client.get(reverse("admin:content_training_add"))
+    response = admin_client.get(reverse("admin:swamp_training_add"))
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
 def test_resource_add_form_renders(admin_client):
-    response = admin_client.get(reverse("admin:content_resource_add"))
+    response = admin_client.get(reverse("admin:swamp_resource_add"))
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
 def test_resource_change_form_serves_a_downloadable_file_link(admin_client):
     resource = ResourceFactory(title="Pattern")
-    response = admin_client.get(reverse("admin:content_resource_change", args=[resource.pk]))
+    response = admin_client.get(reverse("admin:swamp_resource_change", args=[resource.pk]))
     assert response.status_code == 200
     assert resource.file.url in response.content.decode()
 
@@ -275,6 +275,6 @@ def test_contact_submission_admin_has_no_delete_permission():
 @pytest.mark.django_db
 def test_contact_submission_is_visible_in_admin_changelist(admin_client):
     ContactSubmissionFactory(name="Jamie", email="jamie@example.com")
-    response = admin_client.get(reverse("admin:content_contactsubmission_changelist"))
+    response = admin_client.get(reverse("admin:swamp_contactsubmission_changelist"))
     assert response.status_code == 200
     assert "Jamie" in response.content.decode()

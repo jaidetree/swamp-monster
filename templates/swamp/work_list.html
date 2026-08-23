@@ -7,7 +7,7 @@
 <ul class="works-list">
 	{% for work in works %}
 	<li class="work-card">
-		<a href="{% url 'content:work_detail' work.slug %}">
+		<a href="{% url 'swamp:work_detail' work.slug %}">
 			{% if work.thumbnail %}
 			<img src="{{ work.thumbnail.image.url }}" alt="{{ work.title }}">
 			{% endif %}

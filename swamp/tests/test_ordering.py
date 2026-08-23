@@ -5,7 +5,7 @@ rule is the bug-prone part of drag-reordering; here it is driven directly
 through its own interface with plain stand-in rows.
 """
 
-from content.ordering import renumber
+from swamp.ordering import renumber
 
 
 class Row:

@@ -1,4 +1,4 @@
-"""Views for the `content` app: the Home page, the public Works listing and
+"""Views for the `swamp` app: the Home page, the public Works listing and
 gallery pages, and the contact form."""
 
 import logging
@@ -40,7 +40,7 @@ def home(request: HttpRequest) -> HttpResponse:
     ]
     return render(
         request,
-        "content/home.html",
+        "swamp/home.html",
         {"works": works, "trainings": trainings, "resources": resources},
     )
 
@@ -51,14 +51,14 @@ def work_list(request: HttpRequest) -> HttpResponse:
     Unlike the (future) Home page teaser, this applies no ``featured`` filter.
     """
     works = Work.objects.filter(published=True).order_by("order")
-    return render(request, "content/work_list.html", {"works": works})
+    return render(request, "swamp/work_list.html", {"works": works})
 
 
 def work_detail(request: HttpRequest, slug: str) -> HttpResponse:
     """A single Work's full image gallery, images in ``order`` with captions."""
     work = get_object_or_404(Work, slug=slug, published=True)
     images = work.images.order_by("order")
-    return render(request, "content/work_detail.html", {"work": work, "images": images})
+    return render(request, "swamp/work_detail.html", {"work": work, "images": images})
 
 
 def contact(request: HttpRequest) -> HttpResponse:
@@ -79,7 +79,7 @@ def contact(request: HttpRequest) -> HttpResponse:
             form = ContactForm()
     else:
         form = ContactForm()
-    return render(request, "content/contact.html", {"form": form, "success": success})
+    return render(request, "swamp/contact.html", {"form": form, "success": success})
 
 
 def _send_contact_notification(submission: ContactSubmission) -> None:

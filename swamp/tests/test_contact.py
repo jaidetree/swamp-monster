@@ -13,7 +13,7 @@ from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
 
-from content.models import ContactSubmission
+from swamp.models import ContactSubmission
 
 TEST_EMAIL_BACKEND = "anymail.backends.test.EmailBackend"
 
@@ -84,7 +84,7 @@ def test_contact_post_valid_resets_form_on_success(client):
 @pytest.mark.django_db
 @override_settings(EMAIL_BACKEND=TEST_EMAIL_BACKEND)
 def test_contact_post_email_failure_still_persists_submission(client):
-    with patch("content.views.send_mail", side_effect=RuntimeError("Postmark is down")):
+    with patch("swamp.views.send_mail", side_effect=RuntimeError("Postmark is down")):
         response = client.post(
             reverse("contact"),
             {

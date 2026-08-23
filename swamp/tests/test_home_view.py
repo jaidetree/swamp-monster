@@ -7,7 +7,7 @@ qualifying rows.
 import pytest
 from django.urls import reverse
 
-from content.tests.factories import ResourceFactory, TrainingFactory, WorkFactory
+from swamp.tests.factories import ResourceFactory, TrainingFactory, WorkFactory
 
 
 @pytest.mark.django_db

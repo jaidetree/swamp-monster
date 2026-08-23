@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "adminsortable2",
     "markdownify",
     "anymail",
-    "content",
+    "swamp",
 ]
 
 MIDDLEWARE = [
@@ -53,7 +53,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "swamp.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "swamp.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 # Database — mapped from lib/swamp/repo.ex (Ecto.Adapters.Postgres). Local
 # dev/CI point DATABASE_URL at the Nix-provisioned local Postgres started by
@@ -159,7 +159,7 @@ if R2_BUCKET_NAME:
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# django-markdownify — renders `content` app Markdown fields (Work.description,
+# django-markdownify — renders `swamp` app Markdown fields (Work.description,
 # WorkImage.caption, ...) via the `|markdownify` template filter. A restrictive
 # allowed-tags whitelist: enough for prose (paragraphs, emphasis, links, lists)
 # with no raw HTML/script/embed surface for owner-authored content.

@@ -2,7 +2,7 @@
 when R2_* env vars are set, falling back to local FileSystemStorage otherwise.
 
 No real R2 credentials or network calls are used here — the fallback case is
-tested by reloading swamp.settings with the R2 env vars absent (the sandbox
+tested by reloading config.settings with the R2 env vars absent (the sandbox
 default), and the R2 case is tested with fake-but-well-formed credentials
 against moto's mocked S3-compatible backend, never a real bucket.
 """
@@ -13,12 +13,12 @@ import boto3
 import pytest
 from moto import mock_aws
 
-import swamp.settings as settings_module
+import config.settings as settings_module
 
 
 @pytest.fixture
 def reload_settings(monkeypatch: pytest.MonkeyPatch):
-    """Reload swamp.settings under patched env vars, then reload again
+    """Reload config.settings under patched env vars, then reload again
     without them so later tests see the sandbox-default (no R2) settings
     module. This only touches the plain settings module object, not
     django.conf.settings — it exercises the same conditional wiring logic

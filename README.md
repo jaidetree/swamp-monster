@@ -9,7 +9,7 @@ for the original). Empty scaffold stage: no CMS content/pages yet.
 nix develop        # Python 3.13, uv, Postgres 18, Node 24
 uv sync             # install Python deps
 npm install         # install Tailwind/esbuild CLIs
-npm run build:css   # compile static_src/css/app.css -> static/css/app.css
+npm run build:css   # compile static_src/css/input.css -> static/css/app.css
 ```
 
 ## Local Postgres

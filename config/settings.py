@@ -105,7 +105,7 @@ USE_TZ = True
 
 # Static files — WhiteNoise serves STATIC_ROOT (collectstatic output) at
 # runtime; STATICFILES_DIRS is where the Tailwind CLI build (see
-# static_src/css/app.css -> static/css/app.css) and other pre-built assets
+# static_src/css/input.css -> static/css/app.css) and other pre-built assets
 # live before collectstatic bakes them into STATIC_ROOT at image build time.
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]

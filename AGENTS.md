@@ -9,7 +9,7 @@ here).
 - **Django 5.2**, Python 3.13, deps managed with **uv** (`uv sync`, `uv run ...`).
 - **Postgres**, project-local via `scripts/db` (Nix-provisioned, not a system
   install or Docker container) — `make db-start` / `db-stop` / `db-status`.
-- **Tailwind v4** compiled with the Tailwind CLI through npm (`static_src/css/app.css`
+- **Tailwind v4** compiled with the Tailwind CLI through npm (`static_src/css/input.css`
   → `static/css/app.css`), not the Phoenix asset pipeline — `make css` / `css-watch`.
 - **ruff** (lint + format), **mypy** with `django-stubs`, **pytest** with
   `pytest-django` + `pytest-playwright` for tests, `factory-boy` for fixtures,

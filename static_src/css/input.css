@@ -247,8 +247,7 @@
 		@apply flex flex-row justify-between py-2;
 	}
 	.hero {
-		@apply bg-cover;
-		background: url(../images/hero-bg.jpg) no-repeat;
+		background: url(../images/hero-bg.jpg) no-repeat center / cover;
 		height: 495px;
 	}
 
@@ -311,7 +310,7 @@
 	}
 
 	.field {
-		@apply flex flex-col gap-2 p-8;
+		@apply flex flex-col gap-2 px-8 py-4;
 	}
 
 	.field > label {

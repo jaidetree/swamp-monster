@@ -42,3 +42,10 @@ erl_crash.dump
 .elixir-tools/
 .elixir_ls/
 .lexical/
+
+# Legacy Elixir reference worktree (parity reference during the Django port,
+# not tracked in this repo's history — see legacy-elixir branch)
+/legacy-elixir/
+
+# Obsidian local UI state at repo root
+/.obsidian/

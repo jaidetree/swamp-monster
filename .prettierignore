@@ -1,0 +1,9 @@
+node_modules
+static
+staticfiles
+deps
+_build
+.venv
+legacy-elixir
+placeholder
+**/migrations

@@ -6,14 +6,10 @@
 {% block header_class %}with-hero{% endblock %}
 
 {% block content %}
-<section class="hero relative flex flex-col items-start justify-end p-4">
-	<img src="{% static 'images/swamp-monster-logo.svg' %}" alt="Swamp Monster Logo" class="size-48">
-	<h1 class="font-display text-4xl text-gold">Swamp Monster Leather</h1>
-	<p class="font-body text-lg max-w-xl">
-		Handcrafted leather goods, built one stitch at a time in Gowanus,
-		Brooklyn.
-	</p>
-	<a href="{% url 'swamp:work_list' %}" class="btn btn-ghost">View the Portfolio</a>
+<section class="hero">
+	<div class="h-full flex flex-col items-start justify-end p-4">
+		<img src="{% static 'images/swamp-monster-logo.svg' %}" alt="Swamp Monster Logo" class="size-48">
+	</div>
 </section>
 
 <section class="works grow py-16">

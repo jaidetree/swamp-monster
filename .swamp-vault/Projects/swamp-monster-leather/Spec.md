@@ -1,3 +1,6 @@
+---
+modified: 2026-09-16T20:33:43-04:00
+---
 # PRD: Swamp Monster Leather
 
 Marketing site for Swamp Monster Leather, a leather goods maker, built on

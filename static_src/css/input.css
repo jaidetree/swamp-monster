@@ -266,10 +266,10 @@
 		@apply absolute size-8;
 	}
 	.section-header .title:before {
-		@apply -left-[3rem];
+		@apply -left-[2.6rem];
 	}
 	.section-header .title:after {
-		@apply -right-[3rem] -scale-100;
+		@apply -right-[2.6rem] -scale-100;
 	}
 
 	.section-header:before,

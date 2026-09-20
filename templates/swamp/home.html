@@ -1,87 +1,123 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Swamp Monster Leather — Handcrafted Leather Goods{% endblock %}
+{% block title %}
+	Swamp Monster Leather — Handcrafted Leather Goods
+{% endblock %}
 
-{% block header_class %}with-hero{% endblock %}
+{% block header_class %}
+	with-hero
+{% endblock %}
 
 {% block content %}
-<section class="hero">
-	<div class="h-full flex flex-col items-start justify-end p-4">
-		<img src="{% static 'images/swamp-monster-logo.svg' %}" alt="Swamp Monster Logo" class="size-48">
-	</div>
-</section>
+	<section class="hero">
+		<div class="h-full flex flex-col items-start justify-end p-4">
+			<img
+				src="{% static 'images/swamp-monster-logo.svg' %}"
+				alt="Swamp Monster Logo"
+				class="size-48"
+			/>
+		</div>
+	</section>
 
-<section class="works grow py-16">
-	<header class="section-header py-3 mb-8">
-		<h2 class="font-display text-2xl text-gold title uppercase">Work</h2>
-	</header>
-	<div class="container">
-		<p class="font-body text-sm text-base-content/75">A selection of recent pieces.</p>
-		{% if works %}
-		<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-			{% for work in works %}
-			<li>
-				<a href="{% url 'swamp:work_detail' work.slug %}" class="group block">
-					{% if work.thumbnail %}
+	<section class="works grow py-16">
+		<header class="section-header py-3 mb-8">
+			<h2 class="font-display text-2xl text-gold title uppercase">Work</h2>
+		</header>
+		<div class="container">
+			<p class="font-body text-sm text-base-content/75">
+				A selection of recent pieces.
+			</p>
+			{% if works %}
+				<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+					{% for work in works %}
+						<li>
+							<a
+								href="{% url 'swamp:work_detail' work.slug %}"
+								class="group block"
+							>
+								{% if work.thumbnail %}
+									<img
+										src="{{ work.thumbnail.image.url }}"
+										alt="{{ work.title }}"
+										class="h-56 w-full rounded-sm border border-gold/40 object-cover"
+									/>
+								{% endif %}
+								<span
+									class="font-base-thick mt-2 block group-hover:text-gold transition-colors duration-300"
+									>{{ work.title }}</span
+								>
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+	</section>
+
+	<div class="footer border-t border-t-gold/20 shadow-lg">
+		<div class="container grid grid-cols-1 gap-12 py-16 md:grid-cols-3">
+			<section>
+				<h2 class="font-display text-xl text-gold">Training</h2>
+				<p class="font-body text-sm text-base-content/75 mt-2">
+					Learn to craft leather goods with 1-on-1 training sessions.
+				</p>
+				<img
+					src="{% static 'images/leather-tools.jpg' %}"
+					alt="Leather working tools used during training sessions"
+					class="bg-black border border-gold w-full h-56 my-8 object-cover"
+				/>
+				{% if trainings %}
+					<ul class="mt-6 flex flex-col gap-2">
+						{% for training in trainings %}
+							<li class="font-base-thick">{{ training.title }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</section>
+
+			<section>
+				<h2 class="font-display text-xl text-gold">Resources</h2>
+				<p class="font-body text-sm text-base-content/75 mt-2">
+					Free templates and guides for your own projects.
+				</p>
+				{% if resources %}
+					<ul class="mt-6 flex flex-col gap-2">
+						{% for resource in resources %}
+							<li>
+								<a
+									href="{{ resource.file.url }}"
+									class="font-base-thick hover:text-gold transition-colors duration-300"
+									>{{ resource.title }}</a
+								>
+							</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</section>
+
+			<section>
+				<h2 class="font-display text-xl text-gold">About</h2>
+				<p class="font-body text-sm text-base-content/75 mt-2">
+					Based in Gowanus, Brooklyn, New York.
+				</p>
+				<img
+					src="{% static 'images/gowanus-brookyln.jpg' %}"
+					alt="Photo of Gowanus, Brooklyn, NY"
+					class="block w-full h-56 my-8 bg-black border border-gold shadow-lg object-cover"
+				/>
+				<a
+					href="#"
+					class="font-bold text-xs text-gold hover:text-white transition-colors duration-500 inline-flex flex-row gap-x-2 items-center"
+				>
 					<img
-						src="{{ work.thumbnail.image.url }}"
-						alt="{{ work.title }}"
-						class="h-56 w-full rounded-sm border border-gold/40 object-cover"
-					>
-					{% endif %}
-					<span class="font-base-thick mt-2 block group-hover:text-gold transition-colors duration-300">{{ work.title }}</span>
+						src="{% static 'images/youtube.svg' %}"
+						alt="YouTube Logo"
+						class="size-4"
+					/>
+					Follow Swamp Monster Leather on YouTube
 				</a>
-			</li>
-			{% endfor %}
-		</ul>
-		{% endif %}
+			</section>
+		</div>
 	</div>
-</section>
-
-<div class="footer border-t border-t-gold/20 shadow-lg">
-	<div class="container grid grid-cols-1 gap-12 py-16 md:grid-cols-3">
-		<section>
-			<h2 class="font-display text-xl text-gold">Training</h2>
-			<p class="font-body text-sm text-base-content/75 mt-2">
-				Learn to craft your own leather goods with private training
-				sessions.
-			</p>
-			<img src="{% static 'images/leather-tools.jpg' %}" alt="Leather working tools used during training sessions" class="bg-black border border-gold w-60 h-auto my-4">
-			{% if trainings %}
-			<ul class="mt-6 flex flex-col gap-2">
-				{% for training in trainings %}
-				<li class="font-base-thick">{{ training.title }}</li>
-				{% endfor %}
-			</ul>
-			{% endif %}
-		</section>
-
-		<section>
-			<h2 class="font-display text-xl text-gold">Resources</h2>
-			<p class="font-body text-sm text-base-content/75 mt-2">
-				Free templates and guides for your own projects.
-			</p>
-			{% if resources %}
-			<ul class="mt-6 flex flex-col gap-2">
-				{% for resource in resources %}
-				<li>
-					<a href="{{ resource.file.url }}" class="font-base-thick hover:text-gold transition-colors duration-300">{{ resource.title }}</a>
-				</li>
-				{% endfor %}
-			</ul>
-			{% endif %}
-		</section>
-
-		<section>
-			<h2 class="font-display text-xl text-gold">About</h2>
-			<p class="font-body text-sm text-base-content/75 mt-2">Based in Gowanus, Brooklyn, New York.</p>
-			<img src="{% static 'images/gowanus-brookyln.jpg' %}" alt="Photo of Gowanus, Brooklyn, NY" class="block w-full h-56 my-8 bg-black border border-gold shadow-lg">
-			<a href="#" class="font-bold text-xs text-gold hover:text-white transition-colors duration-500 inline-flex flex-row gap-x-2 items-center">
-				<img src="{% static 'images/youtube.svg' %}" alt="YouTube Logo" class="size-4">
-				Follow Swamp Monster Leather on YouTube
-			</a>
-		</section>
-	</div>
-</div>
 {% endblock %}

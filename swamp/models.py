@@ -8,8 +8,11 @@ so a drag handle can occupy the leftmost column instead, renumbered 1..N after
 every drag via ``swamp.ordering.renumber``.
 """
 
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.text import slugify
+
+RESOURCE_ICON_EXTENSIONS = ["svg", "png", "jpg", "jpeg", "webp"]
 
 
 class Work(models.Model):
@@ -175,7 +178,12 @@ class Resource(models.Model):
         blank=True,
         help_text="Markdown; rendered via django-markdownify wherever displayed.",
     )
-    icon = models.ImageField(upload_to="resources/icons/", blank=True)
+    icon = models.FileField(
+        upload_to="resources/icons/",
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=RESOURCE_ICON_EXTENSIONS)],
+        help_text="SVG, PNG, JPG, or WebP.",
+    )
     file = models.FileField(upload_to="resources/files/")
     published = models.BooleanField(
         default=True,

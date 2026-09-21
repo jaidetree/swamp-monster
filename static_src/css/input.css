@@ -5,6 +5,10 @@
 @source "./";
 @source "../../templates";
 
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons SVGs come from the "heroicons" npm package. */
+@plugin "../vendor/heroicons";
+
 /* Single dark theme only — no daisyUI, no theme switching. Values ported
    from the former daisyUI dark theme's CSS custom properties, now inlined
    directly on :root. */

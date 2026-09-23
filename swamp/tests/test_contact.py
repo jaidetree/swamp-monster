@@ -1,8 +1,8 @@
-"""Tests for the `/contact` page and Postmark notification (ticket 15).
+"""Tests for the `/contact` page and Mailjet notification (ticket 15).
 
 All email assertions run against Anymail's test/dummy backend
 (`anymail.backends.test.EmailBackend`), which records sends in
-`django.core.mail.outbox` without touching the network — no real Postmark
+`django.core.mail.outbox` without touching the network — no real Mailjet
 credentials are needed, or used, here.
 """
 
@@ -63,7 +63,8 @@ def test_contact_post_valid_creates_submission_and_sends_email(client):
     assert len(mail.outbox) == 1
     sent = mail.outbox[0]
     assert "Jamie Visitor" in sent.subject
-    assert sent.to == ["hello@swamp-monster-leather.com"]
+    assert sent.to == ["info+form@swampmonsterleather.com"]
+    assert sent.reply_to == ["jamie@example.com"]
 
 
 @pytest.mark.django_db
@@ -84,7 +85,7 @@ def test_contact_post_valid_resets_form_on_success(client):
 @pytest.mark.django_db
 @override_settings(EMAIL_BACKEND=TEST_EMAIL_BACKEND)
 def test_contact_post_email_failure_still_persists_submission(client):
-    with patch("swamp.views.send_mail", side_effect=RuntimeError("Postmark is down")):
+    with patch("swamp.views.EmailMessage.send", side_effect=RuntimeError("Postmark is down")):
         response = client.post(
             reverse("contact"),
             {

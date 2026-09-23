@@ -4,7 +4,7 @@ gallery pages, and the contact form."""
 import logging
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render
 
@@ -65,7 +65,7 @@ def contact(request: HttpRequest) -> HttpResponse:
     """The public contact form.
 
     A valid POST persists a `ContactSubmission` row first, then attempts the
-    Postmark notification email. The email send is best-effort: a failure is
+    Mailjet notification email. The email send is best-effort: a failure is
     logged, never raised past this view, so it can't roll back or block the
     already-committed DB record (ticket 15's core acceptance criterion).
     """
@@ -85,17 +85,18 @@ def contact(request: HttpRequest) -> HttpResponse:
 def _send_contact_notification(submission: ContactSubmission) -> None:
     """Best-effort notification email for a just-saved submission.
 
-    Any send failure (bad credentials, Postmark outage, ...) is logged and
+    Any send failure (bad credentials, Mailjet outage, ...) is logged and
     swallowed rather than propagated — the DB row is already committed and
     must stand regardless of email delivery.
     """
     try:
-        send_mail(
+        EmailMessage(
             subject=f"New contact form submission from {submission.name}",
-            message=submission.message,
+            body=submission.message,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[settings.CONTACT_NOTIFICATION_EMAIL],
-        )
+            to=[settings.CONTACT_NOTIFICATION_EMAIL],
+            reply_to=[submission.email],
+        ).send()
     except Exception:
         logger.exception(
             "Failed to send contact notification email for submission %s", submission.pk

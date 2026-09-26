@@ -46,15 +46,34 @@ var DEFAULT_SETTINGS = {
 
 // src/utils.ts
 var import_obsidian = require("obsidian");
-async function getFileContent(app, file) {
+function normalizeForComparison(content) {
+  return content.replace(/\r\n?/g, "\n").replace(/\n+$/, "");
+}
+function getComparableContent(content, modifiedProperty) {
+  var _a;
+  content = normalizeForComparison(content);
+  const info = (0, import_obsidian.getFrontMatterInfo)(content);
+  try {
+    const frontmatter = info.exists ? (_a = (0, import_obsidian.parseYaml)(info.frontmatter)) != null ? _a : {} : {};
+    if (typeof frontmatter !== "object" || Array.isArray(frontmatter))
+      return content;
+    delete frontmatter[modifiedProperty];
+    return JSON.stringify(frontmatter) + "\n" + content.slice(info.contentStart);
+  } catch (e) {
+    return content;
+  }
+}
+async function getFileContent(app, file, modifiedProperty) {
   var _a;
   for (const leaf of app.workspace.getLeavesOfType("markdown")) {
     const view = leaf.view;
     if (view instanceof import_obsidian.MarkdownView && ((_a = view.file) == null ? void 0 : _a.path) === file.path) {
-      return view.getViewData();
+      await view.save();
+      break;
     }
   }
-  return app.vault.read(file);
+  const content = await app.vault.read(file);
+  return modifiedProperty === void 0 ? normalizeForComparison(content) : getComparableContent(content, modifiedProperty);
 }
 
 // src/settings-tab.ts
@@ -67,7 +86,7 @@ var FrontMatterTimestampsSettingTab = class extends import_obsidian2.PluginSetti
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    new import_obsidian2.Setting(containerEl).setName("Automatic update").setDesc("Automatically update modified time on file change").addToggle(
+    new import_obsidian2.Setting(containerEl).setName("Automatic update").setDesc("Automatically update modified time after editing").addToggle(
       (toggle) => toggle.setValue(this.plugin.settings.autoUpdate).onChange(async (value) => {
         this.plugin.settings.autoUpdate = value;
         await this.plugin.saveSettings();
@@ -135,7 +154,7 @@ var FrontMatterTimestampsSettingTab = class extends import_obsidian2.PluginSetti
       })
     );
     new import_obsidian2.Setting(containerEl).setName("Delay modified time update").setDesc(
-      "Maximum delay in milliseconds before a modified timestamp is written after you leave a note. When switching tabs, the update runs sooner (up to 250 ms) so background tabs do not block it. The update is always skipped while the note is your active editor."
+      "Idle time in milliseconds after an edit before updating the modified timestamp."
     ).addText(
       (text) => text.setValue(
         this.plugin.settings.delayModifiedUpdate.toString()
@@ -239,6 +258,10 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
     this.lastChecksum = null;
     this.pendingNewFiles = /* @__PURE__ */ new Set();
     this.pendingModifiedUpdates = /* @__PURE__ */ new Map();
+    this.fileChangeQueue = Promise.resolve();
+    this.editorContents = /* @__PURE__ */ new WeakMap();
+    this.pendingEditorUpdates = /* @__PURE__ */ new Map();
+    this.lastUpdatedContents = /* @__PURE__ */ new WeakMap();
   }
   isPathExcluded(filePath) {
     if (this.settings.excludedFolders.length === 0) {
@@ -295,14 +318,44 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
         }
       })
     );
-    if (this.settings.autoUpdate) {
-      this.registerEvent(
-        this.app.workspace.on(
-          "active-leaf-change",
-          () => this.handleFileChange()
-        )
-      );
-    }
+    this.registerEvent(
+      this.app.workspace.on(
+        "active-leaf-change",
+        () => this.handleFileChange()
+      )
+    );
+    this.registerEvent(
+      this.app.workspace.on("editor-change", (editor, info) => {
+        const file = info.file;
+        if (!file || file.extension !== "md")
+          return;
+        const content = getComparableContent(
+          editor.getValue(),
+          this.settings.modifiedPropertyName
+        );
+        const previous = this.editorContents.get(editor);
+        this.editorContents.set(editor, content);
+        if (previous === content || !this.settings.autoUpdate || this.isPathExcluded(file.path))
+          return;
+        if (this.pendingNewFiles.has(file.path))
+          return;
+        const pending = this.pendingEditorUpdates.get(file);
+        if (pending !== void 0)
+          window.clearTimeout(pending);
+        this.pendingEditorUpdates.set(
+          file,
+          window.setTimeout(() => {
+            this.pendingEditorUpdates.delete(file);
+            if (this.settings.autoUpdate) {
+              void this.updateModifiedTime(file, true, true).catch(
+                console.error
+              );
+            }
+          }, Math.max(0, this.settings.delayModifiedUpdate))
+        );
+      })
+    );
+    this.app.workspace.onLayoutReady(() => this.handleFileChange());
   }
   cancelPendingModifiedUpdate(filePath) {
     const timeoutId = this.pendingModifiedUpdates.get(filePath);
@@ -367,10 +420,37 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
       this.pendingNewFiles.delete(file.path);
     }
   }
-  async handleFileChange() {
+  handleFileChange() {
+    for (const leaf of this.app.workspace.getLeavesOfType("markdown")) {
+      const view = leaf.view;
+      if (view instanceof import_obsidian3.MarkdownView) {
+        this.editorContents.set(
+          view.editor,
+          getComparableContent(view.editor.getValue(), this.settings.modifiedPropertyName)
+        );
+      }
+    }
+    if (!this.settings.autoUpdate)
+      return;
+    const activeFile = this.app.workspace.getActiveFile();
+    const currentFile = activeFile && activeFile.extension === "md" ? activeFile : null;
+    if (currentFile && this.isPathExcluded(currentFile.path))
+      return;
+    if (currentFile)
+      this.cancelPendingModifiedUpdate(currentFile.path);
+    const checksum = currentFile ? getFileContent(this.app, currentFile, this.settings.modifiedPropertyName).catch((error) => {
+      console.error(
+        `Error reading baseline for ${currentFile.path}:`,
+        error
+      );
+      return null;
+    }) : Promise.resolve(null);
+    this.fileChangeQueue = this.fileChangeQueue.then(() => this.processFileChange(currentFile, checksum)).catch((error) => {
+      console.error("Error processing file change:", error);
+    });
+  }
+  async processFileChange(currentFile, checksum) {
     const { debug } = this.settings;
-    const markdownView = this.app.workspace.getActiveViewOfType(import_obsidian3.MarkdownView);
-    const currentFile = markdownView ? markdownView.file : null;
     if (debug) {
       console.log("handleFileChange called");
     }
@@ -383,9 +463,10 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
           if (fileExists) {
             const currentChecksum = await getFileContent(
               this.app,
-              this.lastActiveFile
+              this.lastActiveFile,
+              this.settings.modifiedPropertyName
             );
-            if (this.lastChecksum !== currentChecksum) {
+            if (this.lastChecksum !== null && this.lastChecksum !== currentChecksum) {
               if (debug) {
                 console.log(
                   `File ${this.lastActiveFile.path} changed while inactive, updating modified time.`
@@ -409,9 +490,6 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
       this.lastChecksum = null;
       return;
     }
-    if (this.isPathExcluded(currentFile.path))
-      return;
-    this.cancelPendingModifiedUpdate(currentFile.path);
     if (this.lastActiveFile && this.lastActiveFile.path !== currentFile.path) {
       try {
         const lastFileExists = await this.app.vault.adapter.exists(
@@ -420,9 +498,10 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
         if (lastFileExists) {
           const lastFileChecksum = await getFileContent(
             this.app,
-            this.lastActiveFile
+            this.lastActiveFile,
+            this.settings.modifiedPropertyName
           );
-          if (this.lastChecksum !== lastFileChecksum) {
+          if (this.lastChecksum !== null && this.lastChecksum !== lastFileChecksum) {
             if (debug) {
               console.log(
                 `File ${this.lastActiveFile.path} changed before switching, updating modified time.`
@@ -439,11 +518,12 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
       }
     }
     if (!this.lastActiveFile || this.lastActiveFile.path !== currentFile.path) {
+      const baseline = await checksum;
       this.lastActiveFile = currentFile;
-      this.lastChecksum = await getFileContent(this.app, currentFile);
+      this.lastChecksum = baseline;
     }
   }
-  async updateModifiedTime(file, immediate = false) {
+  async updateModifiedTime(file, immediate = false, editorUpdate = false) {
     const { debug } = this.settings;
     if (!(file == null ? void 0 : file.path))
       return;
@@ -456,13 +536,15 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
       return;
     }
     const apply = async () => {
-      var _a, _b;
+      var _a;
+      if (!immediate && !this.settings.autoUpdate)
+        return;
       if (!immediate) {
-        const activeView = this.app.workspace.getActiveViewOfType(import_obsidian3.MarkdownView);
-        if (((_a = activeView == null ? void 0 : activeView.file) == null ? void 0 : _a.path) === file.path) {
+        const activeFile = this.app.workspace.getActiveFile();
+        if ((activeFile == null ? void 0 : activeFile.path) === file.path) {
           if (debug) {
             console.log(
-              `Skipping modified time update for ${file.path}; file is the active editor.`
+              `Skipping modified time update for ${file.path}; file is currently active.`
             );
           }
           return;
@@ -476,13 +558,13 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
         }
         return;
       }
-      for (const leaf of this.app.workspace.getLeavesOfType("markdown")) {
-        const view = leaf.view;
-        if (view instanceof import_obsidian3.MarkdownView && ((_b = view.file) == null ? void 0 : _b.path) === file.path) {
-          await view.save();
-          break;
-        }
-      }
+      const content = await getFileContent(
+        this.app,
+        file,
+        this.settings.modifiedPropertyName
+      );
+      if ((!immediate || editorUpdate) && this.lastUpdatedContents.get(file) === content)
+        return;
       const currentTime = (0, import_obsidian3.moment)().format(this.settings.dateFormat);
       try {
         await this.app.fileManager.processFrontMatter(
@@ -491,6 +573,10 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
             frontmatter[this.settings.modifiedPropertyName] = currentTime;
           }
         );
+        this.lastUpdatedContents.set(file, content);
+        if (((_a = this.lastActiveFile) == null ? void 0 : _a.path) === file.path) {
+          this.lastChecksum = content;
+        }
         if (debug) {
           console.log(`File frontmatter updated for ${file.path}`);
         }
@@ -507,6 +593,7 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
       }
     };
     if (immediate) {
+      this.cancelPendingModifiedUpdate(file.path);
       await apply();
       return;
     }
@@ -524,6 +611,10 @@ var FrontMatterTimestampsPlugin = class extends import_obsidian3.Plugin {
     this.pendingModifiedUpdates.set(file.path, timeoutId);
   }
   onunload() {
+    for (const timeoutId of this.pendingEditorUpdates.values()) {
+      window.clearTimeout(timeoutId);
+    }
+    this.pendingEditorUpdates.clear();
     for (const timeoutId of this.pendingModifiedUpdates.values()) {
       window.clearTimeout(timeoutId);
     }

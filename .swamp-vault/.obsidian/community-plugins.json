@@ -21,5 +21,6 @@
   "kanban-base",
   "obsidian-custom-attachment-location",
   "better-markdown-links",
-  "frontmatter-markdown-links"
+  "frontmatter-markdown-links",
+  "advanced-rename-and-delete-handler"
 ]

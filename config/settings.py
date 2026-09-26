@@ -2,7 +2,7 @@
 Django settings for the swamp project.
 
 Ported from the Phoenix app's config/*.exs: `lib/swamp/repo.ex` maps to
-DATABASES below, `lib/swamp/mailer.ex` maps to the Anymail/Postmark
+DATABASES below, `lib/swamp/mailer.ex` maps to the Anymail/Mailjet
 EMAIL_BACKEND config.
 """
 
@@ -115,7 +115,9 @@ STORAGES: dict[str, dict[str, object]] = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+        if DEBUG
+        else "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
@@ -183,14 +185,15 @@ MARKDOWNIFY = {
 }
 
 # Email — mapped from lib/swamp/mailer.ex (Swoosh.Mailer). Config only: no
-# Postmark API key is required to wire the setting itself, only to send.
-EMAIL_BACKEND = "anymail.backends.postmark.EmailBackend"
+# Mailjet API key is required to wire the setting itself, only to send.
+EMAIL_BACKEND = "anymail.backends.mailjet.EmailBackend"
 ANYMAIL = {
-    "POSTMARK_SERVER_TOKEN": env("POSTMARK_SERVER_TOKEN", default=""),
+    "MAILJET_API_KEY": env("MAILJET_API_KEY", default=""),
+    "MAILJET_SECRET_KEY": env("MAILJET_SECRET_KEY", default=""),
 }
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@swamp-monster-leather.com")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="info+outbox@swampmonsterleather.com")
 
 # Where contact-form notification emails are sent — the Swamp Monster inbox.
 CONTACT_NOTIFICATION_EMAIL = env(
-    "CONTACT_NOTIFICATION_EMAIL", default="hello@swamp-monster-leather.com"
+    "CONTACT_NOTIFICATION_EMAIL", default="info+form@swampmonsterleather.com"
 )

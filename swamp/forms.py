@@ -6,7 +6,7 @@ from django import forms
 class ContactForm(forms.Form):
     """The public contact form: name/email/message, server-side validated.
 
-    Backs both the `ContactSubmission` row and the Postmark notification
+    Backs both the `ContactSubmission` row and the Mailjet notification
     email sent by `swamp.views.contact`.
     """
 

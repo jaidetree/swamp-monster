@@ -25,6 +25,7 @@ def test_contact_get_renders_form(client):
     assert response.status_code == 200
     assert b'name="name"' in response.content
     assert b'name="email"' in response.content
+    assert b'name="subject"' in response.content
     assert b'name="message"' in response.content
 
 
@@ -32,11 +33,28 @@ def test_contact_get_renders_form(client):
 def test_contact_post_invalid_shows_errors_and_does_not_persist(client):
     response = client.post(
         reverse("contact"),
-        {"name": "", "email": "not-an-email", "message": ""},
+        {"name": "", "email": "not-an-email", "subject": "", "message": ""},
     )
 
     assert response.status_code == 200
     assert response.context["form"].errors
+    assert ContactSubmission.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_contact_post_missing_subject_shows_error_and_does_not_persist(client):
+    response = client.post(
+        reverse("contact"),
+        {
+            "name": "Jamie Visitor",
+            "email": "jamie@example.com",
+            "subject": "",
+            "message": "Interested in a custom bag.",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "subject" in response.context["form"].errors
     assert ContactSubmission.objects.count() == 0
 
 
@@ -48,6 +66,7 @@ def test_contact_post_valid_creates_submission_and_sends_email(client):
         {
             "name": "Jamie Visitor",
             "email": "jamie@example.com",
+            "subject": "Business Inquiry",
             "message": "Interested in a custom bag.",
         },
     )
@@ -58,11 +77,12 @@ def test_contact_post_valid_creates_submission_and_sends_email(client):
     submission = ContactSubmission.objects.get()
     assert submission.name == "Jamie Visitor"
     assert submission.email == "jamie@example.com"
+    assert submission.subject == "Business Inquiry"
     assert submission.message == "Interested in a custom bag."
 
     assert len(mail.outbox) == 1
     sent = mail.outbox[0]
-    assert "Jamie Visitor" in sent.subject
+    assert sent.subject == "Business Inquiry"
     assert sent.to == ["info+form@swampmonsterleather.com"]
     assert sent.reply_to == ["jamie@example.com"]
 
@@ -75,6 +95,7 @@ def test_contact_post_valid_resets_form_on_success(client):
         {
             "name": "Jamie Visitor",
             "email": "jamie@example.com",
+            "subject": "Business Inquiry",
             "message": "Interested in a custom bag.",
         },
     )
@@ -91,6 +112,7 @@ def test_contact_post_email_failure_still_persists_submission(client):
             {
                 "name": "Jamie Visitor",
                 "email": "jamie@example.com",
+                "subject": "Business Inquiry",
                 "message": "Interested in a custom bag.",
             },
         )

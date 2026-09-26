@@ -50,4 +50,5 @@ class ContactSubmissionFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: f"Contact {n}")
     email = factory.Sequence(lambda n: f"contact{n}@example.com")
+    subject = "Question"
     message = "Hello, I'm interested in a custom piece."

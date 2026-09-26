@@ -86,6 +86,7 @@ def test_contact_form_submission_shows_success_state(live_server, mailoutbox, pa
     page.goto(live_server.url + "/contact/")
     page.fill('input[name="name"]', "Jamie Visitor")
     page.fill('input[name="email"]', "jamie@example.com")
+    page.select_option('select[name="subject"]', "Business Inquiry")
     page.fill('textarea[name="message"]', "Interested in a custom bag.")
     page.click('button[type="submit"]')
 

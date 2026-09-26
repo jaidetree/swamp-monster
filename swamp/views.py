@@ -91,7 +91,7 @@ def _send_contact_notification(submission: ContactSubmission) -> None:
     """
     try:
         EmailMessage(
-            subject=f"New contact form submission from {submission.name}",
+            subject=submission.subject,
             body=submission.message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[settings.CONTACT_NOTIFICATION_EMAIL],

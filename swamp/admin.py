@@ -106,9 +106,9 @@ class ContactSubmissionAdmin(admin.ModelAdmin):
     """Read-only, list-only view of contact-form submissions: a log, not
     owner-curated content, so no add/change permissions are needed."""
 
-    list_display = ("name", "email", "created_at")
-    search_fields = ("name", "email", "message")
-    readonly_fields = ("name", "email", "message", "created_at")
+    list_display = ("name", "email", "subject", "created_at")
+    search_fields = ("name", "email", "subject", "message")
+    readonly_fields = ("name", "email", "subject", "message", "created_at")
 
     def has_add_permission(self, request):
         return False

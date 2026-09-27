@@ -11,6 +11,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("works/", include("swamp.urls")),
     path("contact/", swamp_views.contact, name="contact"),
+    path("training/", swamp_views.training, name="training"),
     path("", swamp_views.home, name="home"),
 ]
 

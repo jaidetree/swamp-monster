@@ -43,13 +43,13 @@
 				/>
 				<div class="flex flex-row justify-between">
 					<a
-						href="{{ resource.file.url }}"
+						href="{% url 'training' %}#request-training"
 						class="btn btn-ghost inline-flex flex-row items-center gap-2 text-xs px-4 py-2"
 					>
 						Book 1-on-1 Session Now
 					</a>
 					<a
-						href="{{ resource.file.url }}"
+						href="{% url 'training' %}"
 						class="text-gold inline-flex flex-row items-center gap-2 text-xs font-bold"
 					>
 						Learn More

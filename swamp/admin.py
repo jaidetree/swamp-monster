@@ -90,25 +90,14 @@ class WorkAdmin(RenumberingSortableAdmin):
     inlines = [WorkImageInline]
 
 
-@admin.register(Training)
-class TrainingAdmin(RenumberingSortableAdmin):
-    """Drag-to-reorder changelist for Trainings. No inline: unlike Work,
-    Training has a single plain ``image`` rather than a gallery."""
-
-
 @admin.register(Resource)
 class ResourceAdmin(RenumberingSortableAdmin):
     """Drag-to-reorder changelist for Resources (icon + downloadable file)."""
 
 
-@admin.register(ContactSubmission)
-class ContactSubmissionAdmin(admin.ModelAdmin):
-    """Read-only, list-only view of contact-form submissions: a log, not
-    owner-curated content, so no add/change permissions are needed."""
-
-    list_display = ("name", "email", "subject", "created_at")
-    search_fields = ("name", "email", "subject", "message")
-    readonly_fields = ("name", "email", "subject", "message", "created_at")
+class ReadOnlyLogAdmin(admin.ModelAdmin):
+    """Base for a log model with no owner-curated content: visible in admin,
+    but never added, changed, or deleted through it."""
 
     def has_add_permission(self, request):
         return False
@@ -118,3 +107,22 @@ class ContactSubmissionAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(ContactSubmission)
+class ContactSubmissionAdmin(ReadOnlyLogAdmin):
+    """Read-only, list-only view of contact-form submissions."""
+
+    list_display = ("name", "email", "subject", "created_at")
+    search_fields = ("name", "email", "subject", "message")
+    readonly_fields = ("name", "email", "subject", "message", "created_at")
+
+
+@admin.register(Training)
+class TrainingAdmin(ReadOnlyLogAdmin):
+    """Read-only, list-only view of training-session requests submitted
+    through the Training landing page's form."""
+
+    list_display = ("name", "email", "target_dates", "created_at")
+    search_fields = ("name", "email", "message")
+    readonly_fields = ("name", "email", "message", "target_dates", "created_at")

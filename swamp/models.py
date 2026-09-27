@@ -8,6 +8,7 @@ so a drag handle can occupy the leftmost column instead, renumbered 1..N after
 every drag via ``swamp.ordering.renumber``.
 """
 
+from django.contrib.postgres.fields import ArrayField
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils.text import slugify
@@ -108,60 +109,28 @@ class WorkImage(models.Model):
 
 
 class Training(models.Model):
-    """A training offering the owner has built out.
-
-    Same shape as ``Work`` minus the gallery — a single ``image`` rather than
-    an ordered set of ``WorkImage``s.
+    """A training-session request submitted through the Training landing
+    page's form (``swamp.views.training``) — the same shape as
+    ``ContactSubmission`` (name/email/message) plus the one or more dates the
+    visitor proposed for the session.
     """
 
-    title = models.CharField(max_length=200)
-    slug = models.SlugField(
-        max_length=200,
-        unique=True,
+    name = models.CharField(max_length=200)
+    email = models.EmailField()
+    message = models.TextField()
+    target_dates = ArrayField(
+        models.DateField(),
         blank=True,
-        help_text="Auto-generated from the title; override for a custom URL.",
-    )
-    description = models.TextField(
-        blank=True,
-        help_text="Markdown; rendered via django-markdownify wherever displayed.",
-    )
-    image = models.ImageField(upload_to="training/", blank=True)
-    published = models.BooleanField(
-        default=True,
-        help_text="Unpublished training entries are hidden from the public site.",
-    )
-    featured = models.BooleanField(
-        default=False,
-        help_text="Featured training entries appear in the Home page teaser.",
-    )
-    order = models.PositiveIntegerField(
-        default=0,
-        help_text="Manual display order; lower numbers appear first.",
+        default=list,
+        help_text="One or more dates the visitor proposed for the session.",
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["order", "title"]
+        ordering = ["-created_at"]
 
     def __str__(self):
-        return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = self._unique_slug()
-        super().save(*args, **kwargs)
-
-    def _unique_slug(self):
-        """A slug unique across Trainings, appending -2, -3, ... on a clash."""
-        base = slugify(self.title)
-        slug = base
-        siblings = Training.objects.exclude(pk=self.pk)
-        n = 2
-        while siblings.filter(slug=slug).exists():
-            slug = f"{base}-{n}"
-            n += 1
-        return slug
+        return f"{self.name} <{self.email}>"
 
 
 class Resource(models.Model):

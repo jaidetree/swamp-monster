@@ -1,7 +1,11 @@
-"""Model-level tests for Work/WorkImage/Training/Resource: published/featured/
-order filtering (the query behavior the eventual Home/Works/Training/Resource
-views rely on) plus slug/thumbnail seams.
+"""Model-level tests for Work/WorkImage/Resource: published/featured/order
+filtering (the query behavior the Home/Works/Resource views rely on) plus
+slug/thumbnail seams. Training and ContactSubmission are request logs rather
+than owner-curated content, so their coverage is just shape (str/ordering),
+further down.
 """
+
+from datetime import date
 
 import pytest
 
@@ -90,51 +94,29 @@ def test_work_image_str_includes_work_title_and_order():
 # --- Training ---
 
 
-def test_training_published_defaults_to_true():
-    assert Training().published is True
+def test_training_target_dates_defaults_to_empty_list():
+    assert Training(name="Jamie", email="jamie@example.com", message="Hi").target_dates == []
 
 
-def test_training_featured_defaults_to_false():
-    assert Training().featured is False
+def test_training_str_includes_name_and_email():
+    submission = TrainingFactory(name="Jamie", email="jamie@example.com")
+    assert str(submission) == "Jamie <jamie@example.com>"
 
 
-def test_training_published_filters_out_unpublished_trainings():
-    TrainingFactory(title="Visible", published=True)
-    TrainingFactory(title="Hidden", published=False)
+def test_training_default_queryset_orders_newest_first():
+    older = TrainingFactory(name="Older")
+    newer = TrainingFactory(name="Newer")
 
-    titles = list(Training.objects.filter(published=True).values_list("title", flat=True))
+    names = list(Training.objects.values_list("name", flat=True))
 
-    assert titles == ["Visible"]
-
-
-def test_training_featured_filters_to_only_featured_trainings():
-    TrainingFactory(title="Featured", featured=True)
-    TrainingFactory(title="Not featured", featured=False)
-
-    titles = list(Training.objects.filter(featured=True).values_list("title", flat=True))
-
-    assert titles == ["Featured"]
+    assert names == [newer.name, older.name]
 
 
-def test_training_default_queryset_orders_by_order_then_title():
-    TrainingFactory(title="Z", order=2)
-    TrainingFactory(title="A", order=1)
-    TrainingFactory(title="B", order=1)
+def test_training_target_dates_stores_multiple_dates_in_order():
+    submission = TrainingFactory(target_dates=[date(2026, 10, 1), date(2026, 10, 15)])
+    submission.refresh_from_db()
 
-    titles = list(Training.objects.values_list("title", flat=True))
-
-    assert titles == ["A", "B", "Z"]
-
-
-def test_training_slug_is_auto_generated_from_title_when_blank():
-    training = TrainingFactory(title="Saddle Stitching Basics", slug="")
-    assert training.slug == "saddle-stitching-basics"
-
-
-def test_training_slug_is_unique_on_clash():
-    TrainingFactory(title="Basics", slug="basics")
-    second = TrainingFactory(title="Basics", slug="")
-    assert second.slug == "basics-2"
+    assert submission.target_dates == [date(2026, 10, 1), date(2026, 10, 15)]
 
 
 # --- Resource ---

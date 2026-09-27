@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+	Training — Swamp Monster Leather
+{% endblock %}
+
+{% block content %}
+	<header class="section-header py-3 mb-8">
+		<h1 class="font-display text-2xl text-gold title uppercase">Training</h1>
+	</header>
+
+	<section class="container pb-16">
+		<div class="max-w-3xl mx-auto text-center">
+			<h2 class="font-display text-xl text-gold">
+				Learn leathercraft in a private one-on-one session
+			</h2>
+			<p class="font-body text-base-content/75 mt-4">
+				Work at the bench with Swamp Monster Leather and build a real piece from
+				start to finish. Get tailored guidance every step of the way during the
+				session.
+			</p>
+		</div>
+	</section>
+
+	<section class="container pb-16">
+		<h2 class="font-display text-xl text-gold uppercase text-center mb-8">
+			Possible Projects
+		</h2>
+		<ul class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+			<li class="bg-surface-100 border border-gold/40 rounded-lg p-6">
+				<h3 class="text-gold font-bold">Wallets &amp; Cardholders</h3>
+				<p class="text-sm text-base-content/75 mt-2">
+					A focused first project covering cutting, skiving, and stitching
+					fundamentals.
+				</p>
+			</li>
+			<li class="bg-surface-100 border border-gold/40 rounded-lg p-6">
+				<h3 class="text-gold font-bold">Bags &amp; Totes</h3>
+				<p class="text-sm text-base-content/75 mt-2">
+					Pattern-making, hardware, and construction for a piece you'll actually
+					carry.
+				</p>
+			</li>
+			<li class="bg-surface-100 border border-gold/40 rounded-lg p-6">
+				<h3 class="text-gold font-bold">Belts &amp; Accessories</h3>
+				<p class="text-sm text-base-content/75 mt-2">
+					Edge finishing, tooling, and hardware setting on a smaller, faster
+					build.
+				</p>
+			</li>
+		</ul>
+	</section>
+
+	<section class="container pb-16">
+		<h2 class="font-display text-xl text-gold uppercase text-center mb-8">
+			Skills You'll Build
+		</h2>
+		<ul class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+			<li class="text-sm text-base-content/75">Pattern Making</li>
+			<li class="text-sm text-base-content/75">Cutting &amp; Skiving</li>
+			<li class="text-sm text-base-content/75">Hand Stitching</li>
+			<li class="text-sm text-base-content/75">Edge Finishing</li>
+			<li class="text-sm text-base-content/75">Tooling &amp; Stamping</li>
+			<li class="text-sm text-base-content/75">Dyeing &amp; Finishing</li>
+			<li class="text-sm text-base-content/75">Hardware Setting</li>
+			<li class="text-sm text-base-content/75">Tool Care</li>
+		</ul>
+	</section>
+
+	<section class="container pb-16">
+		<h2 class="font-display text-xl text-gold uppercase text-center mb-8">
+			How It Works
+		</h2>
+		<ol class="grid grid-cols-1 sm:grid-cols-4 gap-6">
+			<li>
+				<div class="text-gold font-display text-2xl">01</div>
+				<h3 class="text-gold font-bold mt-2">Request a Session</h3>
+				<p class="text-sm text-base-content/75 mt-2">
+					Tell me what you'd like to make and when you're free below.
+				</p>
+			</li>
+			<li>
+				<div class="text-gold font-display text-2xl">02</div>
+				<h3 class="text-gold font-bold mt-2">Confirm the Plan</h3>
+				<p class="text-sm text-base-content/75 mt-2">
+					We'll settle on a project, a date, and what to bring.
+				</p>
+			</li>
+			<li>
+				<div class="text-gold font-display text-2xl">03</div>
+				<h3 class="text-gold font-bold mt-2">Build at the Bench</h3>
+				<p class="text-sm text-base-content/75 mt-2">
+					A hands-on session in the Gowanus studio, at your own pace.
+				</p>
+			</li>
+			<li>
+				<div class="text-gold font-display text-2xl">04</div>
+				<h3 class="text-gold font-bold mt-2">Leave With It</h3>
+				<p class="text-sm text-base-content/75 mt-2">
+					Walk out with a finished piece and the skills to make the next one.
+				</p>
+			</li>
+		</ol>
+	</section>
+
+	<section class="pb-16" id="request">
+		<header class="section-header py-3 mb-8">
+			<h2 class="font-display text-2xl text-gold title uppercase">
+				Request a Session
+			</h2>
+		</header>
+
+		<div class="max-w-2xl mx-auto">
+			{% if success %}
+				<div class="flex flex-row items-stretch border border-gold rounded-lg">
+					<div
+						class="flex flex-col items-center p-8 bg-success rounded-l-lg p-8"
+					>
+						<span class="hero-envelope text-base-400 size-24"></span>
+					</div>
+					<div
+						class="bg-surface-100 rounded-r-lg p-8 flex flex-col justify-center"
+					>
+						<h1 class="text-gold text-xl font-display">Request Sent</h1>
+						<p class="text-center text-lg">
+							Thanks — we'll be in touch to confirm a session.
+						</p>
+					</div>
+				</div>
+			{% else %}
+				<form method="post" novalidate class="w-full" id="request-training">
+					{% csrf_token %}
+					{% for field in form %}
+						{% if field.name != "target_dates" %}
+							<div class="field">
+								<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+								{{ field }}
+								{% for error in field.errors %}
+									<p class="form-error">{{ error }}</p>
+								{% endfor %}
+							</div>
+						{% endif %}
+					{% endfor %}
+					<div class="field">
+						<label>Target Date(s)</label>
+						<small class="text-white/50 text-xs">
+							Target dates are not guranteed, but we will find a mutually
+							acceptable time around your target dates
+						</small>
+						<div class="flex flex-col gap-2" data-target-dates-list>
+							{% with dates=form.target_dates.value %}
+								{% for date in dates %}
+									<div
+										class="flex flex-row gap-2 items-center"
+										data-target-date-row
+									>
+										<input
+											type="date"
+											name="target_dates"
+											value="{{ date }}"
+											required
+										/>
+										<button
+											type="button"
+											class="btn-text text-xs"
+											data-remove-date
+										>
+											Remove
+										</button>
+									</div>
+								{% empty %}
+									<div
+										class="flex flex-row gap-2 items-center"
+										data-target-date-row
+									>
+										<input type="date" name="target_dates" required />
+										<button
+											type="button"
+											class="btn-text text-xs"
+											data-remove-date
+										>
+											Remove
+										</button>
+									</div>
+								{% endfor %}
+							{% endwith %}
+						</div>
+						<button type="button" class="btn-text text-xs w-fit" data-add-date>
+							+ Add another date
+						</button>
+						{% for error in form.target_dates.errors %}
+							<p class="form-error">{{ error }}</p>
+						{% endfor %}
+					</div>
+					<div class="form-actions">
+						<button type="submit" class="btn btn-ghost">Request Session</button>
+					</div>
+				</form>
+				<template data-target-date-template>
+					<div class="flex flex-row gap-2 items-center" data-target-date-row>
+						<input type="date" name="target_dates" required />
+						<button type="button" class="btn-text text-xs" data-remove-date>
+							Remove
+						</button>
+					</div>
+				</template>
+			{% endif %}
+		</div>
+	</section>
+
+	<script src="{% static 'swamp/training_dates.js' %}" defer></script>
+{% endblock %}

@@ -1,13 +1,12 @@
 """View/template tests for the Home page (ticket 14). Covers the acceptance
-criteria: featured+published filtering per teaser section (Works/Training/
-Resources), and graceful empty-state rendering when a section has zero
-qualifying rows.
+criteria: featured+published filtering per teaser section (Works/Resources),
+and graceful empty-state rendering when a section has zero qualifying rows.
 """
 
 import pytest
 from django.urls import reverse
 
-from swamp.tests.factories import ResourceFactory, TrainingFactory, WorkFactory
+from swamp.tests.factories import ResourceFactory, WorkFactory
 
 
 @pytest.mark.django_db
@@ -49,21 +48,6 @@ def test_home_works_teaser_orders_by_order_ascending(client):
 
 
 @pytest.mark.django_db
-def test_home_training_teaser_shows_only_featured_published_trainings(client):
-    shown = TrainingFactory(title="Shown Training", published=True, featured=True)
-    TrainingFactory(title="Unfeatured Training", published=True, featured=False)
-    TrainingFactory(title="Unpublished Training", published=False, featured=True)
-
-    response = client.get(reverse("home"))
-
-    trainings = list(response.context["trainings"])
-    assert trainings == [shown]
-    assert b"Shown Training" in response.content
-    assert b"Unfeatured Training" not in response.content
-    assert b"Unpublished Training" not in response.content
-
-
-@pytest.mark.django_db
 def test_home_resource_teaser_shows_only_featured_published_resources(client):
     shown = ResourceFactory(title="Shown Resource", published=True, featured=True)
     ResourceFactory(title="Unfeatured Resource", published=True, featured=False)
@@ -84,9 +68,7 @@ def test_home_renders_without_breakage_when_all_teasers_empty(client):
 
     assert response.status_code == 200
     assert list(response.context["works"]) == []
-    assert list(response.context["trainings"]) == []
     assert list(response.context["resources"]) == []
     # No CMS-editor-facing placeholder text should leak to visitors.
     assert b"no works" not in response.content.lower()
-    assert b"no training" not in response.content.lower()
     assert b"no resources" not in response.content.lower()

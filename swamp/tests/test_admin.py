@@ -22,7 +22,7 @@ from swamp.admin import (
     WorkAdmin,
     WorkImageInline,
 )
-from swamp.models import ContactSubmission, Work
+from swamp.models import ContactSubmission, Training, Work
 from swamp.tests.factories import (
     ContactSubmissionFactory,
     ResourceFactory,
@@ -180,33 +180,11 @@ def test_work_add_form_renders_the_gallery_inline(admin_client):
     assert "images-TOTAL_FORMS" in response.content.decode()
 
 
-# --- Training/Resource reuse the same sortable-admin base as Work ---
-
-
-def test_training_changelist_is_sortable():
-    assert issubclass(TrainingAdmin, SortableAdminMixin)
+# --- Resource reuses the same sortable-admin base as Work ---
 
 
 def test_resource_changelist_is_sortable():
     assert issubclass(ResourceAdmin, SortableAdminMixin)
-
-
-@pytest.mark.django_db
-def test_training_reorder_endpoint_persists_new_order(admin_client):
-    first = TrainingFactory(order=1)
-    second = TrainingFactory(order=2)
-    url = reverse("admin:swamp_training_sortable_update")
-
-    response = admin_client.post(
-        url,
-        data=json.dumps({"updatedItems": [[first.pk, 2], [second.pk, 1]]}),
-        content_type="application/json",
-    )
-
-    assert response.status_code == 200
-    first.refresh_from_db()
-    second.refresh_from_db()
-    assert (first.order, second.order) == (2, 1)
 
 
 @pytest.mark.django_db
@@ -225,12 +203,6 @@ def test_resource_reorder_endpoint_persists_new_order(admin_client):
     first.refresh_from_db()
     second.refresh_from_db()
     assert (first.order, second.order) == (2, 1)
-
-
-@pytest.mark.django_db
-def test_training_add_form_renders(admin_client):
-    response = admin_client.get(reverse("admin:swamp_training_add"))
-    assert response.status_code == 200
 
 
 @pytest.mark.django_db
@@ -276,5 +248,31 @@ def test_contact_submission_admin_has_no_delete_permission():
 def test_contact_submission_is_visible_in_admin_changelist(admin_client):
     ContactSubmissionFactory(name="Jamie", email="jamie@example.com")
     response = admin_client.get(reverse("admin:swamp_contactsubmission_changelist"))
+    assert response.status_code == 200
+    assert "Jamie" in response.content.decode()
+
+
+# --- Training is read-only in admin ---
+
+
+def test_training_admin_has_no_add_permission():
+    admin_instance = TrainingAdmin(Training, site)
+    assert admin_instance.has_add_permission(RequestFactory().get("/")) is False
+
+
+def test_training_admin_has_no_change_permission():
+    admin_instance = TrainingAdmin(Training, site)
+    assert admin_instance.has_change_permission(RequestFactory().get("/")) is False
+
+
+def test_training_admin_has_no_delete_permission():
+    admin_instance = TrainingAdmin(Training, site)
+    assert admin_instance.has_delete_permission(RequestFactory().get("/")) is False
+
+
+@pytest.mark.django_db
+def test_training_is_visible_in_admin_changelist(admin_client):
+    TrainingFactory(name="Jamie", email="jamie@example.com")
+    response = admin_client.get(reverse("admin:swamp_training_changelist"))
     assert response.status_code == 200
     assert "Jamie" in response.content.decode()

@@ -3,41 +3,45 @@
 	Contact — Swamp Monster Leather
 {% endblock %}
 {% block content %}
-	<header class="section-header py-3 mb-8">
-		<h1 class="font-display text-2xl text-gold title uppercase">Contact</h1>
-	</header>
+	<div class="bg-scales grow">
+		<header class="section-header py-3 mb-8">
+			<h1 class="font-display text-2xl text-gold title uppercase">Contact</h1>
+		</header>
 
-	<section class="max-w-2xl mx-auto">
-		{% if success %}
-			<div class="flex flex-row items-stretch border border-gold rounded-lg">
-				<div class="flex flex-col items-center p-8 bg-success rounded-l-lg p-8">
-					<span class="hero-envelope text-base-400 size-24"></span>
-				</div>
-				<div
-					class="bg-surface-100 rounded-r-lg p-8 flex flex-col justify-center"
-				>
-					<h1 class="text-gold text-xl font-display">Message Sent</h1>
-					<p class="contact-success text-center text-lg">
-						Thanks for reaching out — we'll be in touch soon
-					</p>
-				</div>
-			</div>
-		{% else %}
-			<form method="post" novalidate class="w-full">
-				{% csrf_token %}
-				{% for field in form %}
-					<div class="field">
-						<label for="{{ field.id_for_label }}">{{ field.label }}</label>
-						{{ field }}
-						{% for error in field.errors %}
-							<p class="form-error">{{ error }}</p>
-						{% endfor %}
+		<section class="pb-16 pt-8 max-w-2xl mx-auto w-full">
+			{% if success %}
+				<div class="flex flex-row items-stretch border border-gold rounded-lg">
+					<div
+						class="flex flex-col items-center p-8 bg-success rounded-l-lg p-8"
+					>
+						<span class="hero-envelope text-base-400 size-24"></span>
 					</div>
-				{% endfor %}
-				<div class="form-actions">
-					<button type="submit" class="btn btn-ghost">Send</button>
+					<div
+						class="bg-surface-100 rounded-r-lg p-8 flex flex-col justify-center"
+					>
+						<h1 class="text-gold text-xl font-display">Message Sent</h1>
+						<p class="contact-success text-center text-lg">
+							Thanks for reaching out — we'll be in touch soon
+						</p>
+					</div>
 				</div>
-			</form>
-		{% endif %}
-	</section>
+			{% else %}
+				<form method="post" novalidate class="w-full">
+					{% csrf_token %}
+					{% for field in form %}
+						<div class="field">
+							<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+							{{ field }}
+							{% for error in field.errors %}
+								<p class="form-error">{{ error }}</p>
+							{% endfor %}
+						</div>
+					{% endfor %}
+					<div class="form-actions">
+						<button type="submit" class="btn btn-ghost">Send</button>
+					</div>
+				</form>
+			{% endif %}
+		</section>
+	</div>
 {% endblock %}

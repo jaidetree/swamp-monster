@@ -144,12 +144,32 @@
 	--color-gold: rgb(215, 170, 93);
 	--color-blood: rgb(84, 13, 13);
 	--color-bone: rgb(250, 250, 250);
-	--color-base-100: rgb(12, 9, 9);
-	--color-base-200: rgba(0, 0, 0, 0.2);
-	--color-base-300: rgba(0, 0, 0, 0.4);
-	--color-base-400: rgba(0, 0, 0, 0.6);
-	--color-surface-100: rgba(255, 255, 255, 0.05);
-	--color-surface-200: rgba(255, 255, 255, 0.1);
+	--color-base-100: rgb(18, 18, 18);
+	--color-base-200: color-mix(
+		in oklab,
+		var(--color-base-100),
+		rgb(0, 0, 0) 20%
+	);
+	--color-base-300: color-mix(
+		in oklab,
+		var(--color-base-100),
+		rgb(0, 0, 0) 40%
+	);
+	--color-base-400: color-mix(
+		in oklab,
+		var(--color-base-100),
+		rgb(0, 0, 0) 60%
+	);
+	--color-surface-100: color-mix(
+		in oklab,
+		var(--color-base-100),
+		rgb(255, 255, 255) 5%
+	);
+	--color-surface-200: color-mix(
+		in oklab,
+		var(--color-base-100),
+		rgb(255, 255, 255) 10%
+	);
 	--color-info: oklch(58% 0.158 241.966);
 	--color-success: rgba(142, 188, 96, 1);
 	--color-warning: oklch(66% 0.179 58.318);
@@ -219,8 +239,23 @@
 }
 
 @utility bg-wood {
-	@apply bg-cover;
-	background-image: url(../images/wood-bg.jpg);
+	background:
+		linear-gradient(
+			to bottom,
+			--alpha(var(--color-black) / 40%),
+			--alpha(var(--color-surface-100) / 10%)
+		),
+		url(/static/images/wood-bg.jpg);
+}
+
+@utility bg-scales {
+	background:
+		linear-gradient(
+			to top,
+			--alpha(var(--color-black) / 90%),
+			--alpha(var(--color-base-200) / 50%)
+		),
+		url(../images/scales-pattern.png);
 }
 
 @layer components {
@@ -247,8 +282,7 @@
 	}
 
 	.section-header {
-		background: url(../images/wood-bg.jpg) no-repeat;
-		@apply relative bg-cover border-t-1 border-t-gold border-b-1 border-b-gold/50 flex flex-row flex-nowrap justify-stretch items-stretch;
+		@apply bg-linear-to-b from-surface-100 to-base-100/20 relative border-t-1 border-t-gold border-b-1 border-b-gold/50 flex flex-row flex-nowrap justify-stretch items-stretch bg-bottom-right;
 	}
 
 	.section-header .title {
@@ -274,23 +308,12 @@
 		@apply h-[20px] flex-grow block my-auto;
 	}
 
-	.works {
-		background:
-			linear-gradient(
-				to top,
-				--alpha(var(--color-base-100) / 50%),
-				--alpha(var(--color-base-100) / 0%)
-			),
-			url(../images/scales-pattern.png);
-	}
-
 	.footer {
-		background: url(../images/wood-bg.jpg) no-repeat;
 		@apply py-8 bg-cover;
 	}
 
 	form {
-		@apply flex flex-col gap-4 pt-8 border border-gold/60 bg-surface-100 rounded-xl shadow-lg;
+		@apply flex flex-col gap-4 pt-8 border border-gold/60 bg-surface-100 rounded-xl shadow-xl shadow-black/80;
 	}
 
 	.form-actions {

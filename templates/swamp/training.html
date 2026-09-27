@@ -104,14 +104,14 @@
 		</ol>
 	</section>
 
-	<section class="pb-16" id="request">
+	<section class="bg-wood" id="request-training">
 		<header class="section-header py-3 mb-8">
 			<h2 class="font-display text-2xl text-gold title uppercase">
 				Request a Session
 			</h2>
 		</header>
 
-		<div class="max-w-2xl mx-auto">
+		<div class="pb-16 pt-8 max-w-2xl mx-auto">
 			{% if success %}
 				<div class="flex flex-row items-stretch border border-gold rounded-lg">
 					<div
@@ -129,7 +129,7 @@
 					</div>
 				</div>
 			{% else %}
-				<form method="post" novalidate class="w-full" id="request-training">
+				<form method="post" novalidate class="w-full">
 					{% csrf_token %}
 					{% for field in form %}
 						{% if field.name != "target_dates" %}

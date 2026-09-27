@@ -13,6 +13,7 @@ from swamp.tests.factories import WorkFactory, WorkImageFactory
 @pytest.mark.django_db
 def test_work_list_shows_only_published_works(client):
     published = WorkFactory(title="Published Work", published=True)
+    WorkImageFactory(work=published, order=1)
     WorkFactory(title="Unpublished Work", published=False)
 
     response = client.get(reverse("swamp:work_list"))
@@ -25,15 +26,15 @@ def test_work_list_shows_only_published_works(client):
 
 
 @pytest.mark.django_db
-def test_work_list_orders_by_order_ascending(client):
-    second = WorkFactory(title="Second", order=2)
-    first = WorkFactory(title="First", order=1)
-    third = WorkFactory(title="Third", order=3)
+def test_work_list_orders_newest_first(client):
+    first = WorkFactory(title="First")
+    second = WorkFactory(title="Second")
+    third = WorkFactory(title="Third")
 
     response = client.get(reverse("swamp:work_list"))
 
     works = list(response.context["works"])
-    assert works == [first, second, third]
+    assert works == [third, second, first]
 
 
 @pytest.mark.django_db

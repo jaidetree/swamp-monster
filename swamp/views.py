@@ -46,11 +46,13 @@ def home(request: HttpRequest) -> HttpResponse:
 
 
 def work_list(request: HttpRequest) -> HttpResponse:
-    """The full portfolio listing: every published Work, owner-controlled order.
+    """The full portfolio listing: every published Work, newest first.
 
-    Unlike the (future) Home page teaser, this applies no ``featured`` filter.
+    Unlike the Home page teaser (owner-curated via ``featured``/``order``),
+    this applies no ``featured`` filter and orders by ``created_at`` so newly
+    published pieces surface automatically without owner upkeep.
     """
-    works = Work.objects.filter(published=True).order_by("order")
+    works = Work.objects.filter(published=True).order_by("-created_at")
     return render(request, "swamp/work_list.html", {"works": works})
 
 

@@ -25,27 +25,7 @@
 			<h2 class="font-display text-2xl text-gold title uppercase">Work</h2>
 		</header>
 		<div class="container pb-16">
-			{% if works %}
-				<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-					{% for work in works %}
-						<li>
-							<div class="group block">
-								{% if work.thumbnail %}
-									<img
-										src="{{ work.thumbnail.image.url }}"
-										alt="{{ work.title }}"
-										class="h-56 w-full rounded-sm border border-gold/40 object-cover"
-									/>
-								{% endif %}
-							</div>
-						</li>
-					{% endfor %}
-				</ul>
-			{% else %}
-				<p class="font-body text-sm text-base-content/75">
-					A selection of recent pieces.
-				</p>
-			{% endif %}
+			{% include "swamp/_work_grid.html" with empty_message="A selection of recent pieces." %}
 		</div>
 	</section>
 

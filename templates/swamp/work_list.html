@@ -3,19 +3,12 @@
 {% block title %}Works — Swamp Monster Leather{% endblock %}
 
 {% block content %}
-<h1>Works</h1>
-<ul class="works-list">
-	{% for work in works %}
-	<li class="work-card">
-		<a href="{% url 'swamp:work_detail' work.slug %}">
-			{% if work.thumbnail %}
-			<img src="{{ work.thumbnail.image.url }}" alt="{{ work.title }}">
-			{% endif %}
-			<span>{{ work.title }}</span>
-		</a>
-	</li>
-	{% empty %}
-	<li>No works published yet.</li>
-	{% endfor %}
-</ul>
+	<section class="works grow">
+		<header class="section-header py-3 mb-8">
+			<h1 class="font-display text-2xl text-gold title uppercase">Work</h1>
+		</header>
+		<div class="container pb-16">
+			{% include "swamp/_work_grid.html" with empty_message="No works published yet." %}
+		</div>
+	</section>
 {% endblock %}

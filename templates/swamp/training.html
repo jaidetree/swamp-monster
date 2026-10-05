@@ -27,7 +27,7 @@
 		<h2 class="font-display text-xl text-gold uppercase text-center mb-8">
 			Possible Projects
 		</h2>
-		<ul class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+		<ul class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 			<li class="bg-surface-100 border border-gold/40 rounded-lg p-6">
 				<h3 class="text-gold font-bold">Wallets &amp; Cardholders</h3>
 				<p class="text-sm text-base-content/75 mt-2">
@@ -72,7 +72,7 @@
 		<h2 class="font-display text-xl text-gold uppercase text-center mb-8">
 			How It Works
 		</h2>
-		<ol class="grid grid-cols-1 sm:grid-cols-4 gap-6">
+		<ol class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 			<li>
 				<div class="text-gold font-display text-2xl">01</div>
 				<h3 class="text-gold font-bold mt-2">Request a Session</h3>
@@ -111,20 +111,18 @@
 			</h2>
 		</header>
 
-		<div class="pb-16 pt-8 max-w-2xl mx-auto">
+		<div class="px-4 pb-16 pt-8 max-w-2xl mx-auto">
 			{% if success %}
 				<div class="flex flex-row items-stretch border border-gold rounded-lg">
-					<div
-						class="flex flex-col items-center p-8 bg-success rounded-l-lg p-8"
-					>
+					<div class="flex flex-col items-center p-8 bg-success rounded-l-lg">
 						<span class="hero-envelope text-base-400 size-24"></span>
 					</div>
 					<div
-						class="bg-surface-100 rounded-r-lg p-8 flex flex-col justify-center"
+						class="bg-surface-100 rounded-r-lg p-8 flex flex-col justify-center grow"
 					>
 						<h1 class="text-gold text-xl font-display">Request Sent</h1>
 						<p class="text-center text-lg">
-							Thanks — we'll be in touch to confirm a session.
+							Thanks — we'll be in touch to confirm a session
 						</p>
 					</div>
 				</div>

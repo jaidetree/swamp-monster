@@ -223,7 +223,7 @@
 }
 
 @utility container {
-	@apply max-w-7xl mx-auto;
+	@apply px-8 max-w-lg lg:max-w-7xl mx-auto lg:px-0;
 }
 
 @utility btn {
@@ -260,19 +260,18 @@
 
 @layer components {
 	.site-header {
-		@apply flex w-full items-center justify-center;
+		@apply lg:flex w-full lg:items-center lg:justify-center;
 	}
 	.site-header.compact {
-		@apply bg-cover bg-no-repeat;
+		@apply bg-cover bg-no-repeat lg:h-[3.75rem];
 		background-image: url(../images/hero-bg.jpg);
 		background-position: 50% 10%;
-		height: 3.75rem;
 	}
 	.site-header.with-hero {
 		@apply absolute;
 	}
 	.navbar {
-		@apply flex flex-row justify-between py-2;
+		@apply flex flex-col items-center lg:flex lg:flex-row lg:justify-between py-4;
 	}
 	.hero {
 		@apply bg-no-repeat bg-cover;
@@ -305,7 +304,7 @@
 	.section-header:after {
 		content: '';
 		background: url(../images/lines.svg) repeat-x 0% 50%;
-		@apply h-[20px] flex-grow block my-auto;
+		@apply h-[20px] flex-grow block my-auto bg-size-[auto_13px];
 	}
 
 	.footer {
@@ -313,7 +312,7 @@
 	}
 
 	form {
-		@apply flex flex-col gap-4 pt-8 border border-gold/60 bg-surface-100 rounded-xl shadow-xl shadow-black/80;
+		@apply flex flex-col gap-4 pt-4 lg:pt-8 border border-gold/60 bg-surface-100 rounded-xl shadow-xl shadow-black/80 m-auto;
 	}
 
 	.form-actions {
@@ -333,7 +332,7 @@
 	}
 
 	.field {
-		@apply flex flex-col gap-2 px-8;
+		@apply flex flex-col gap-2 px-4 lg:px-8;
 	}
 
 	.field > label {
@@ -341,7 +340,7 @@
 	}
 
 	.work-gallery-image__trigger {
-		@apply block w-full cursor-pointer;
+		@apply block w-full max-w-lg cursor-pointer m-auto;
 	}
 
 	.image-lightbox {

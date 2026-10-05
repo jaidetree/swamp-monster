@@ -1,5 +1,5 @@
 {% if works %}
-	<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+	<ul class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 		{% for work in works %}
 			<li>
 				<div class="group block">
@@ -14,7 +14,7 @@
 							<img
 								src="{{ work.thumbnail.image.url }}"
 								alt="{{ work.title }}"
-								class="h-72 w-full rounded-sm border border-gold/40 object-cover"
+								class="h-72 w-full max-w-lg rounded-sm border border-gold/40 object-cover"
 							/>
 						</button>
 					{% endif %}

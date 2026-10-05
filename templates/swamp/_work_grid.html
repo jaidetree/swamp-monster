@@ -14,7 +14,7 @@
 							<img
 								src="{{ work.thumbnail.image.url }}"
 								alt="{{ work.title }}"
-								class="h-56 w-full rounded-sm border border-gold/40 object-cover"
+								class="h-72 w-full rounded-sm border border-gold/40 object-cover"
 							/>
 						</button>
 					{% endif %}
@@ -23,7 +23,6 @@
 		{% endfor %}
 	</ul>
 {% else %}
-	<p class="font-body text-sm text-base-content/75">
-		{{ empty_message }}
-	</p>
+	<p class="font-body text-sm text-base-content/75">{{ empty_message }}</p>
 {% endif %}
+{% include "swamp/_image_lightbox.html" %}

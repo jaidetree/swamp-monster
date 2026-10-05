@@ -339,4 +339,21 @@
 	.field > label {
 		@apply text-lg text-gold/75;
 	}
+
+	.work-gallery-image__trigger {
+		@apply block w-full cursor-pointer;
+	}
+
+	.image-lightbox {
+		@apply bg-surface-100 border border-gold/40 p-6 max-w-[90vw] max-h-[90vh] rounded-lg shadow-xl shadow-black/80;
+	}
+	.image-lightbox::backdrop {
+		@apply bg-base-100/90 backdrop-blur-sm;
+	}
+	.image-lightbox__image {
+		@apply block w-auto h-auto max-w-[80vw] max-h-[80vh] object-contain;
+	}
+	.image-lightbox__close {
+		@apply absolute top-2 right-2 text-gold hover:text-white transition-colors duration-200;
+	}
 }

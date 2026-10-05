@@ -1,12 +1,12 @@
-"""Views for the `swamp` app: the Home page, the public Works listing and
-gallery pages, and the contact form."""
+"""Views for the `swamp` app: the Home page, the public Works listing, and
+the contact form."""
 
 import logging
 
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 
 from .forms import ContactForm, TrainingRequestForm
 from .models import ContactSubmission, Resource, Training, Work
@@ -49,13 +49,6 @@ def work_list(request: HttpRequest) -> HttpResponse:
     """
     works = Work.objects.filter(published=True).order_by("-created_at")
     return render(request, "swamp/work_list.html", {"works": works})
-
-
-def work_detail(request: HttpRequest, slug: str) -> HttpResponse:
-    """A single Work's full image gallery, images in ``order`` with captions."""
-    work = get_object_or_404(Work, slug=slug, published=True)
-    images = work.images.order_by("order")
-    return render(request, "swamp/work_detail.html", {"work": work, "images": images})
 
 
 def contact(request: HttpRequest) -> HttpResponse:

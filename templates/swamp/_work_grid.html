@@ -4,11 +4,19 @@
 			<li>
 				<div class="group block">
 					{% if work.thumbnail %}
-						<img
-							src="{{ work.thumbnail.image.url }}"
-							alt="{{ work.title }}"
-							class="h-56 w-full rounded-sm border border-gold/40 object-cover"
-						/>
+						<button
+							type="button"
+							class="work-gallery-image__trigger"
+							data-lightbox-trigger
+							data-lightbox-url="{{ work.thumbnail.image.url }}"
+							data-lightbox-alt="{{ work.title }}"
+						>
+							<img
+								src="{{ work.thumbnail.image.url }}"
+								alt="{{ work.title }}"
+								class="h-56 w-full rounded-sm border border-gold/40 object-cover"
+							/>
+						</button>
 					{% endif %}
 				</div>
 			</li>

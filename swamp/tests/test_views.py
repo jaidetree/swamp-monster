@@ -1,7 +1,5 @@
-"""View/template tests for the public Works listing and gallery pages
-(ticket 13). Covers the acceptance criteria: the published filter and order
-on `/works`, and gallery rendering (images in order, Markdown captions) on
-a Work's detail page.
+"""View/template tests for the public Works listing (ticket 13). Covers the
+acceptance criteria: the published filter and order on `/works`.
 """
 
 import pytest
@@ -36,34 +34,3 @@ def test_work_list_orders_newest_first(client):
     works = list(response.context["works"])
     assert works == [third, second, first]
 
-
-@pytest.mark.django_db
-def test_work_detail_returns_404_for_unpublished_work(client):
-    work = WorkFactory(published=False)
-
-    response = client.get(reverse("swamp:work_detail", args=[work.slug]))
-
-    assert response.status_code == 404
-
-
-@pytest.mark.django_db
-def test_work_detail_renders_images_in_order(client):
-    work = WorkFactory(published=True)
-    second = WorkImageFactory(work=work, order=2, caption="Second caption")
-    first = WorkImageFactory(work=work, order=1, caption="First caption")
-
-    response = client.get(reverse("swamp:work_detail", args=[work.slug]))
-
-    assert response.status_code == 200
-    images = list(response.context["images"])
-    assert images == [first, second]
-
-
-@pytest.mark.django_db
-def test_work_detail_renders_caption_as_markdown(client):
-    work = WorkFactory(published=True)
-    WorkImageFactory(work=work, order=1, caption="**bold** caption")
-
-    response = client.get(reverse("swamp:work_detail", args=[work.slug]))
-
-    assert b"<strong>bold</strong> caption" in response.content

@@ -1,0 +1,14 @@
+{% load static %}
+<dialog class="image-lightbox" data-lightbox-dialog closedby="any">
+	<button
+		type="button"
+		class="image-lightbox__close"
+		data-lightbox-close
+		aria-label="Close"
+	>
+		<span class="hero-x-mark size-6" aria-hidden="true"></span>
+	</button>
+	<img class="image-lightbox__image" data-lightbox-image alt="" />
+</dialog>
+
+<script src="{% static 'swamp/image_lightbox.js' %}" defer></script>
